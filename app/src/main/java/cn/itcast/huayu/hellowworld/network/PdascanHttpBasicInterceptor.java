@@ -38,6 +38,7 @@ public class PdascanHttpBasicInterceptor implements ClientHttpRequestInterceptor
             throw new BusinessException("当前网络连接未打开,请检查当前网络连接");
         }
 
+
 //        request.getHeaders().set("loginName",BaseCache.userInfo.strUsrNo);
 //        request.getHeaders().set("deptCode",BaseCache.userInfo.strCompanyID);
 //        request.getHeaders().set("appVersion","0.0.1");

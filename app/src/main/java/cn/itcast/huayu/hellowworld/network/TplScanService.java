@@ -15,9 +15,8 @@ import cn.itcast.huayu.hellowworld.model.ResponseBaseEntity;
 public interface TplScanService {
 
     //1、下拉计划
-    @Get("/{cityname}/{key}")
-    ResponseBaseEntity<Void> getScantPlan( String cityname,String key);
-
+    @Get("?cityname={cityname}&key={key}")
+    ResponseBaseEntity<Void> getScantPlan(String cityname, String key);
 
 
 }

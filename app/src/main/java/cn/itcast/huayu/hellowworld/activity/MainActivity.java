@@ -28,6 +28,6 @@ public class MainActivity extends BaseActivity {
     @Background
     void pullData() {
 
-        Service.getScantPlan("上海","bb5336b483148c60699b59df9b926e2f");
+        Service.getScantPlan("上海", "bb5336b483148c60699b59df9b926e2f");
     }
 }
