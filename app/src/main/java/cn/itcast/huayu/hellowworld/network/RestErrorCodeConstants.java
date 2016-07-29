@@ -11,6 +11,8 @@ public class RestErrorCodeConstants {
 	 * 成功状态码
 	 */
 	public static final String STATUS_SUCCESS = "1000";
+	public static final String STATUS_SUCCESS_TOW = "200";
+
 	public static final String STATUS_SUCCESS_INFO = "成功";
 	/**
 	 * 权限错误状态码

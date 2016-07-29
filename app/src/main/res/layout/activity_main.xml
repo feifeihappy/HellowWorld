@@ -10,17 +10,29 @@
     tools:context=".activity.MainActivity">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView" />
+        android:text="Hello World!" />
 
     <Button
+        android:id="@+id/bt_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="提交"
-        android:id="@+id/bt_button"
-        android:layout_marginTop="60dp"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="查询天气" />
+
+    <Button
+        android:id="@+id/bt_button_menu"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="查询菜谱" />
+
+
 </RelativeLayout>

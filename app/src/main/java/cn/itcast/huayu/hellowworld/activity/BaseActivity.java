@@ -16,7 +16,7 @@ import org.androidannotations.annotations.WindowFeature;
 import org.androidannotations.annotations.rest.RestService;
 
 import cn.itcast.huayu.hellowworld.MyApplication;
-import cn.itcast.huayu.hellowworld.network.TplScanService;
+import cn.itcast.huayu.hellowworld.network.WeatherService;
 
 /**
  * 处理Activity公共特性
@@ -30,7 +30,7 @@ public abstract class BaseActivity
 	@App
 	public MyApplication mApp;
 	@RestService
-	protected TplScanService Service;
+	protected WeatherService Service;
 	//网络进度条
 	private Dialog netLoadingDialog;
 

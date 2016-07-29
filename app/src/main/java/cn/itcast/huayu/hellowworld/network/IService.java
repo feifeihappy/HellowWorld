@@ -6,6 +6,8 @@ package cn.itcast.huayu.hellowworld.network;
 public interface IService {
 
     public static final String Url = "http://v.juhe.cn/weather/index";
+    public static final String MenuUrl = "http://apis.juhe.cn/cook/query.php";
+
 
 
 }

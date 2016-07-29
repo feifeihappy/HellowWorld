@@ -26,8 +26,8 @@ import cn.itcast.huayu.hellowworld.util.JsonUtils;
  * Created by 271755 on 2015/1/12.
  */
 @EBean(scope = EBean.Scope.Singleton)
-public class PdascanHttpBasicInterceptor implements ClientHttpRequestInterceptor {
-    private static final String TAG = PdascanHttpBasicInterceptor.class.getSimpleName();
+public class HttpBasicInterceptor implements ClientHttpRequestInterceptor {
+    private static final String TAG = HttpBasicInterceptor.class.getSimpleName();
     @App
     MyApplication application;
 
@@ -66,7 +66,8 @@ public class PdascanHttpBasicInterceptor implements ClientHttpRequestInterceptor
         if (resBaseVo == null) {
             throw new BusinessException(AppUtil.NET_CONNECTION_EXCEPTION_ERR_CODE, "网络请求异常");
         }
-        if (RestErrorCodeConstants.STATUS_SUCCESS.equals(resBaseVo.getResultcode())) {
+        if ((RestErrorCodeConstants.STATUS_SUCCESS.equals(resBaseVo.getResultcode()))
+                || (RestErrorCodeConstants.STATUS_SUCCESS_TOW.equals(resBaseVo.getResultcode()))) {
             //服务器返回成功状态
             return response;
         } else {
