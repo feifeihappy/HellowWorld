@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.fister_"></activity>
+        <activity android:name=".activity.FisterActivity_"></activity>
     </application>
 
 </manifest>

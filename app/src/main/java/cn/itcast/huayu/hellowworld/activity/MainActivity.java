@@ -1,66 +1,45 @@
 package cn.itcast.huayu.hellowworld.activity;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.rest.RestService;
+import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 
-import java.util.List;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 import cn.itcast.huayu.hellowworld.R;
-import cn.itcast.huayu.hellowworld.model.ResponseBaseEntity;
-import cn.itcast.huayu.hellowworld.model.WeatherResult;
-import cn.itcast.huayu.hellowworld.model.menu.MenuDataVo;
-import cn.itcast.huayu.hellowworld.model.menu.MenuResult;
-import cn.itcast.huayu.hellowworld.network.Menu;
+import cn.itcast.huayu.hellowworld.adapter.MyViewPagerAdapter;
+import cn.itcast.huayu.hellowworld.fragment.FragmentOne;
+import cn.itcast.huayu.hellowworld.fragment.FragmentThree;
+import cn.itcast.huayu.hellowworld.fragment.FragmentTwo;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
 
-    @RestService
-    Menu mMenuService;
-
-
+    @ViewById(R.id.viewpager)
+    ViewPager mViewPager;
+    @ViewById(R.id.tabLayout)
+    TabLayout mTabLayout;
 
     @AfterViews
     void initView() {
         System.out.println("视图初始化");
+        MyViewPagerAdapter mFragmentAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
+        mFragmentAdapter.addfragment(FragmentOne.newInstance(), "菜谱");
+        mFragmentAdapter.addfragment(FragmentTwo.newInstance(), "天气");
+        mFragmentAdapter.addfragment(FragmentThree.newInstance(), "手机号");
+        mViewPager.setAdapter(mFragmentAdapter);
 
+        mTabLayout.addTab(mTabLayout.newTab().setText("第一个fragment"));//给TabLayout添加Tab
+        mTabLayout.addTab(mTabLayout.newTab().setText("第二个fragment"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("第三个fragment"));
+        mTabLayout.setupWithViewPager(mViewPager);//给TabLayout设置关联Vi
     }
 
-    @Click(R.id.bt_button)
-    void clickButton() {
-//        Intent intent  = new Intent(this ,fister_.class);
-//        startActivity(intent);
-        weatherData();
-
-    }
-
-    @Click(R.id.bt_button_menu)
-    void clickButtonMenu() {
-
-        menuData();
-
-
-    }
-
-    @Background
-    void menuData() {
-
-        ResponseBaseEntity<MenuResult> result = mMenuService.getMenu("川菜", "3d7de91fec4a37c9b9481ea036f59846");
-        List<MenuDataVo> mData = result.getResult().getData();
-
-
-
-    }
-
-
-    @Background
-    void weatherData() {
-
-        ResponseBaseEntity<WeatherResult> result = Service.getScantPlan("上海", "bb5336b483148c60699b59df9b926e2f");
-        String temp = result.getResult().getSk().getTemp();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
     }
 }
