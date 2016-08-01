@@ -10,7 +10,7 @@ public class ToastUtil {
    public static void showToast(Context context ,String string){
        Toast.makeText(context,string,Toast.LENGTH_SHORT).show();
    }
-    public static void showLongToast(Context context ,String string){
+    public static void LongToast(Context context ,String string){
         Toast.makeText(context,string,Toast.LENGTH_LONG).show();
     }
 }

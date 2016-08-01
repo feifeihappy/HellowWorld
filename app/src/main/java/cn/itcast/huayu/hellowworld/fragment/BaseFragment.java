@@ -6,14 +6,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.rest.RestService;
 
 import cn.itcast.huayu.hellowworld.MyApplication;
 import cn.itcast.huayu.hellowworld.network.Menu;
 import cn.itcast.huayu.hellowworld.network.WeatherService;
+import cn.itcast.huayu.hellowworld.util.ToastUtil;
 
 /**
  * @author ln：zpf on 2016/7/29
@@ -63,4 +66,10 @@ public class BaseFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
+    @UiThread
+    void showToas(String mes) {
+        Toast.makeText(getActivity(),mes,Toast.LENGTH_SHORT).show();
+    }
+
 }

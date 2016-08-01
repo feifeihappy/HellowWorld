@@ -47,8 +47,11 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
-
+    compile 'com.android.support:support-v4:24.0.0'
+    //信息传递
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
+    //图片加载缓存框架
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
 
 

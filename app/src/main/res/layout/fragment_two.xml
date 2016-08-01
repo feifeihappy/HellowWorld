@@ -6,10 +6,10 @@
 
     <TextView
         android:id="@+id/tv_two"
-        android:layout_marginTop="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="100dp"
         android:text="第二个fragment"
         android:textSize="30dp" />
 
@@ -17,6 +17,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="第二个"
-        />
+        android:text="第二个" />
+
+    <ImageView
+        android:id="@+id/iv_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp" />
+
 </LinearLayout>

@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import cn.itcast.huayu.hellowworld.R;
-import cn.itcast.huayu.hellowworld.activity.FisterActivity_;
+import cn.itcast.huayu.hellowworld.model.menu.MenuDataVo;
 import cn.itcast.huayu.hellowworld.util.ToastUtil;
 import de.greenrobot.event.EventBus;
 
@@ -16,10 +18,10 @@ import de.greenrobot.event.EventBus;
  * @author ln：zpf on 2016/7/30
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private  String[] mData;
-    private  static FragmentActivity mcontext;
+    private static FragmentActivity mcontext;
+    private List<MenuDataVo> mData;
 
-    public RecyclerViewAdapter(FragmentActivity activity, String[] mData) {
+    public RecyclerViewAdapter(FragmentActivity activity, List<MenuDataVo> mData) {
         mcontext = activity;
         this.mData = mData;
     }
@@ -33,18 +35,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.getTextView().setText(mData[position]);
+        holder.getTextView().setText(mData.get(position).getTitle());
+        holder.mTextViewId.setText(String.valueOf(position));
     }
 
     @Override
     public int getItemCount() {
-        return mData.length;
+        return mData.size();
     }
+
+    public void setData(List<MenuDataVo> mData) {
+        this.mData = mData;
+    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTextView;
+        private final TextView mTextViewId;
 
-        public ViewHolder( View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -55,7 +64,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             });
             mTextView = (TextView) itemView.findViewById(R.id.tv);
+            mTextViewId = (TextView) itemView.findViewById(R.id.tv_id);
+
         }
+
         public TextView getTextView() {
             return mTextView;
         }

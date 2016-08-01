@@ -5,8 +5,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -19,12 +23,15 @@ import de.greenrobot.event.ThreadMode;
  * @author ln：zpf on 2016/7/29
  */
 @EFragment(R.layout.fragment_two)
-public class FragmentTwo extends BaseFragment{
+public class FragmentTwo extends BaseFragment {
+    public static FragmentTwo_ instance = null;
     @ViewById(R.id.tv_two)
     TextView mTextView;
+    @ViewById(R.id.iv_two)
+    ImageView mImage;
 
-    public FragmentTwo(){}
-    public static FragmentTwo_ instance = null;
+    public FragmentTwo() {
+    }
 
     public static FragmentTwo_ newInstance() {
         if (instance == null) {
@@ -43,7 +50,16 @@ public class FragmentTwo extends BaseFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+    @AfterViews
+    void  initView(){
+        String url = "http://juheimg.oss-cn-hangzhou.aliyuncs.com/cookbook/s/52/5198_4cde66e2c75c9abe.jpg";
+        Glide.with(this)
+                .load(url)
+//                .override(80, 80)
+                .into(mImage);
     }
 
     @Override

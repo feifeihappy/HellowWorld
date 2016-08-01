@@ -5,10 +5,50 @@
     android:orientation="vertical">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+
+        <EditText
+            android:id="@+id/edit_content"
+            android:layout_width="match_parent"
+            android:layout_height="36dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edittext"
+            android:hint="请输入..."
+            android:padding="5dip"
+            android:singleLine="true"
+            android:textColorHint="#AAAAAA"
+            android:textCursorDrawable="@null"
+            android:textSize="15dip" />
+
+        <Button
+            android:id="@+id/bt_commit"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:layout_weight="0"
+            android:text="提交" />
+
+    </LinearLayout>
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="2dp"
+    android:background="@color/septal"
+    ></View>
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->

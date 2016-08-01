@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
         mFragmentAdapter.addfragment(FragmentTwo.newInstance(), "天气");
         mFragmentAdapter.addfragment(FragmentThree.newInstance(), "手机号");
         mViewPager.setAdapter(mFragmentAdapter);
-
+//        mViewPager.setOffscreenPageLimit(2);
         mTabLayout.addTab(mTabLayout.newTab().setText("第一个fragment"));//给TabLayout添加Tab
         mTabLayout.addTab(mTabLayout.newTab().setText("第二个fragment"));
         mTabLayout.addTab(mTabLayout.newTab().setText("第三个fragment"));
