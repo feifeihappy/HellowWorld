@@ -5,12 +5,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -29,6 +31,8 @@ public class FragmentTwo extends BaseFragment {
     TextView mTextView;
     @ViewById(R.id.iv_two)
     ImageView mImage;
+    @ViewById(R.id.bt)
+    Button mButton;
 
     public FragmentTwo() {
     }
@@ -53,13 +57,24 @@ public class FragmentTwo extends BaseFragment {
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+
     @AfterViews
-    void  initView(){
+    void initView() {
+
+    }
+    @Click
+    void bt(){
+
         String url = "http://juheimg.oss-cn-hangzhou.aliyuncs.com/cookbook/s/52/5198_4cde66e2c75c9abe.jpg";
-        Glide.with(this)
+        Glide
+                .with(this)
                 .load(url)
-//                .override(80, 80)
+                .override(500,500)
+                .placeholder(R.mipmap.ic_launcher)
+                .crossFade()
                 .into(mImage);
+
+
     }
 
     @Override

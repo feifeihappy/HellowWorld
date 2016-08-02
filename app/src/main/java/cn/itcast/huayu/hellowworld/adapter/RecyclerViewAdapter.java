@@ -5,13 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import cn.itcast.huayu.hellowworld.R;
 import cn.itcast.huayu.hellowworld.model.menu.MenuDataVo;
 import cn.itcast.huayu.hellowworld.util.ToastUtil;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -35,8 +39,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.getTextView().setText(mData.get(position).getTitle());
+        MenuDataVo ListData = mData.get(position);
+        holder.getTextView().setText(ListData.getTitle());
         holder.mTextViewId.setText(String.valueOf(position));
+        holder.mTvTags.setText(ListData.getTags());
+
+        Glide.with(mcontext)
+                .load(ListData.getAlbums().get(0))
+                .placeholder(R.mipmap.ic_launcher)
+                .crossFade()
+                .into(holder.mImg);
     }
 
     @Override
@@ -52,19 +64,44 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTextView;
         private final TextView mTextViewId;
+        private final TextView mTvTags;
+        private final ImageView mImg;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+            mTextView = (TextView) itemView.findViewById(R.id.tv_title);
+            mTextViewId = (TextView) itemView.findViewById(R.id.tv_id);
+            mTvTags = (TextView) itemView.findViewById(R.id.tv_tags);
+            mImg = (ImageView) itemView.findViewById(R.id.iv);
+
+            mImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ToastUtil.showToast(mcontext, "第" + getPosition() + "item");
 //                    FisterActivity_.intent(mcontext).start();
                     EventBus.getDefault().post("呵呵");
+                    new SweetAlertDialog(mcontext)
+                            .setTitleText("Here's a message!")
+                            .show();
                 }
             });
-            mTextView = (TextView) itemView.findViewById(R.id.tv);
-            mTextViewId = (TextView) itemView.findViewById(R.id.tv_id);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    ToastUtil.showToast(mcontext, "第" + getPosition() + "item");
+                    return true;
+                }
+            });
+
 
         }
 
