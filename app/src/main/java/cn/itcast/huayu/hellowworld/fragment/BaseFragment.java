@@ -1,5 +1,6 @@
 package cn.itcast.huayu.hellowworld.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import cn.itcast.huayu.hellowworld.MyApplication;
 import cn.itcast.huayu.hellowworld.network.Menu;
 import cn.itcast.huayu.hellowworld.network.WeatherService;
 import cn.itcast.huayu.hellowworld.util.ToastUtil;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * @author ln：zpf on 2016/7/29
@@ -30,10 +32,17 @@ public class BaseFragment extends Fragment {
 
     @RestService
     Menu mMenuService;
+    private SweetAlertDialog pDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (pDialog == null) {
+            pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper()
+                    .setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Loading");
+        }
     }
 
     @Nullable
@@ -69,7 +78,30 @@ public class BaseFragment extends Fragment {
 
     @UiThread
     void showToas(String mes) {
-        Toast.makeText(getActivity(),mes,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), mes, Toast.LENGTH_SHORT).show();
+    }
+
+    @UiThread
+    public void showloadingDialog() {
+        if (this != null && pDialog != null) {
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+    }
+
+    @UiThread
+    public void showloadingDialog(boolean cancel) {
+        if (this != null && pDialog != null) {
+            pDialog.setCancelable(cancel);
+            pDialog.show();
+        }
+    }
+
+    @UiThread
+    public void hideLoadingDialog() {
+        if (this != null && pDialog != null) {
+            pDialog.hide();
+        }
     }
 
 }

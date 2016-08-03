@@ -7,9 +7,10 @@
 
 
     <TextView
+        android:id="@+id/tv_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="哈哈"
+        android:text="另一个activity"
         android:textSize="20dp"
         android:layout_gravity="center"
 

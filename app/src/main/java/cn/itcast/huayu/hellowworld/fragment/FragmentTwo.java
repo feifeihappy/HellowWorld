@@ -17,6 +17,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import cn.itcast.huayu.hellowworld.R;
+import cn.itcast.huayu.hellowworld.model.menu.MenuListData;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
@@ -103,9 +104,8 @@ public class FragmentTwo extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-
     @Subscribe(threadMode = ThreadMode.MainThread)
-    public void helloEventBus(String message) {
-        mTextView.setText(message);
+    public void helloEventBus(MenuListData message) {
+        mTextView.setText(message.getMenuDataVo().getTitle());
     }
 }

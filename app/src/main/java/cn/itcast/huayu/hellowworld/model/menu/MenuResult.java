@@ -8,7 +8,9 @@ import java.util.List;
  */
 public class MenuResult implements Serializable{
 
+public MenuResult(){
 
+}
     /**
      * data : []
      * totalNum : 4

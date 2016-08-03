@@ -1,5 +1,7 @@
 package cn.itcast.huayu.hellowworld.adapter;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +12,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.util.List;
 
 import cn.itcast.huayu.hellowworld.R;
+import cn.itcast.huayu.hellowworld.activity.FisterActivity;
+import cn.itcast.huayu.hellowworld.activity.FisterActivity_;
 import cn.itcast.huayu.hellowworld.model.menu.MenuDataVo;
+import cn.itcast.huayu.hellowworld.model.menu.MenuListData;
+import cn.itcast.huayu.hellowworld.model.menu.MenuResult;
 import cn.itcast.huayu.hellowworld.util.ToastUtil;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.greenrobot.event.EventBus;
@@ -34,7 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_recyclerview, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView,mData);
     }
 
     @Override
@@ -67,7 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final TextView mTvTags;
         private final ImageView mImg;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, final List<MenuDataVo> mData) {
             super(itemView);
 
             mTextView = (TextView) itemView.findViewById(R.id.tv_title);
@@ -75,30 +82,50 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mTvTags = (TextView) itemView.findViewById(R.id.tv_tags);
             mImg = (ImageView) itemView.findViewById(R.id.iv);
 
-            mImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ToastUtil.showToast(mcontext, "第" + getPosition() + "item");
-//                    FisterActivity_.intent(mcontext).start();
-                    EventBus.getDefault().post("呵呵");
-                    new SweetAlertDialog(mcontext)
-                            .setTitleText("Here's a message!")
-                            .show();
-                }
-            });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
 
                     ToastUtil.showToast(mcontext, "第" + getPosition() + "item");
                     return true;
+                }
+            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EventBus.getDefault().post(new MenuListData(mData.get(getAdapterPosition())));
+                    ToastUtil.showToast(mcontext, "第" + getPosition() + "item");
+                    //简单的dialog
+                  /*  new SweetAlertDialog(mcontext)
+                            .setTitleText("Here's a message!")
+                            .show();*/
+
+                    new SweetAlertDialog(mcontext, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("你确定?")
+                            .setContentText("FisterActivity".substring(6,14).replace("A","a"))
+                            .setCancelText("取消")
+                            .setConfirmText("是的")
+                            .showCancelButton(true)
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.cancel();
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.cancel();
+                                    Intent intent = new Intent(mcontext, FisterActivity_.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("mData", mData.get(getAdapterPosition()));
+                                    intent.putExtras(bundle);
+                                    mcontext.startActivity(intent);
+
+                                }
+                            })
+                            .show();
                 }
             });
 

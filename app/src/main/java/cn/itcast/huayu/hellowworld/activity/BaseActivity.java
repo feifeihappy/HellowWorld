@@ -1,5 +1,6 @@
 package cn.itcast.huayu.hellowworld.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -13,6 +14,7 @@ import org.androidannotations.annotations.rest.RestService;
 
 import cn.itcast.huayu.hellowworld.MyApplication;
 import cn.itcast.huayu.hellowworld.network.WeatherService;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 处理Activity公共特性
@@ -22,15 +24,27 @@ import cn.itcast.huayu.hellowworld.network.WeatherService;
 @WindowFeature(Window.FEATURE_NO_TITLE)
 public abstract class BaseActivity
         extends AppCompatActivity {
+
     @App
     public MyApplication mApp;
     @RestService
     protected WeatherService Service;
+    private SweetAlertDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (pDialog == null) {
+            pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper()
+                    .setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Loading");
+        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -38,12 +52,28 @@ public abstract class BaseActivity
         super.onDestroy();
     }
 
-    /**
-     * 点击返回
-     */
-    public void clickBack() {
-        finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
+
+    @UiThread
+    public void showloadingDialog() {
+        if (this != null && pDialog != null) {
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+    }
+
+    @UiThread
+    public void showloadingDialog(boolean cancel) {
+        if (this != null && pDialog != null) {
+            pDialog.setCancelable(cancel);
+            pDialog.show();
+        }
+    }
+
 
     /**
      * 显示异常

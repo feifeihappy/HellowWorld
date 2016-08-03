@@ -1,6 +1,7 @@
 package cn.itcast.huayu.hellowworld.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import cn.itcast.huayu.hellowworld.model.menu.MenuDataVo;
 import cn.itcast.huayu.hellowworld.model.menu.MenuResult;
 import cn.itcast.huayu.hellowworld.util.LogUtil;
 import cn.itcast.huayu.hellowworld.util.ToastUtil;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * @author ln：zpf on 2016/7/29
@@ -88,6 +90,7 @@ public class FragmentOne extends BaseFragment {
             public void onClick(View v) {
                 final String mContent = mEditContent.getText().toString();
                 if (!mContent.equals("")) {
+                    showloadingDialog();
                     DataRequest(mContent);
                 } else {
                     ToastUtil.showToast(getActivity(), "请输入内容");
@@ -103,11 +106,13 @@ public class FragmentOne extends BaseFragment {
             mData = result.getResult().getData();
             setAdapter();
         } catch (Exception e) {
-          showToas(e.toString());
+            showToas(e.toString());
         }
     }
+
     @UiThread
     void setAdapter() {
+        hideLoadingDialog();
         mRecyclerViewAdapter = new RecyclerViewAdapter(getActivity(), mData);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
