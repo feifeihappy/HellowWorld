@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'bugly'
 def AAVersion = '3.3.1'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "cn.itcast.huayu.hellowworld"
+        applicationId "cn.itcast.huayu.menu"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
@@ -52,17 +53,22 @@ dependencies {
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     //图片加载缓存框架
     compile 'com.github.bumptech.glide:glide:3.7.0'
-
+    //bugly
+    compile 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.1.5
+    //第三方对话框
     compile 'cn.pedant.sweetalert:library:1.3'
 }
 
-
+bugly {
+    appId = '<7e8f387dbf>'
+    appKey = '<c7a78dfb-76cd-4e95-8920-fd4a71da6560>'
+}
 apt {
     arguments {
         androidManifestFile variant.outputs[0].processResources.manifestFile
         // if you have multiple outputs (when using splits), you may want to have other index than 0
 
-        resourcePackageName 'cn.itcast.huayu.hellowworld'
+        resourcePackageName 'cn.itcast.huayu.menu'
     }
 
 }
