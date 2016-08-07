@@ -74,7 +74,6 @@ public abstract class BaseActivity
         }
     }
 
-
     /**
      * 显示异常
      *
@@ -96,8 +95,6 @@ public abstract class BaseActivity
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
     }
-
-
     /**
      * 显示长时间消息
      *
