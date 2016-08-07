@@ -25,38 +25,74 @@ import de.greenrobot.event.EventBus;
 /**
  * @author ln：zpf on 2016/7/30
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static FragmentActivity mcontext;
+    private final LayoutInflater mLayoutInflater;
     private List<MenuDataVo> mData;
+    public static final int ITEM_TYPE_HEADER = 1;
+    public static final int ITEM_TYPE_BOTTOM = 2;
+    public static final int ITEM_TYPE_CONTENT = 3;
+    private int mHeaderCount = 1;
+    private int mBottomCount = 1;
 
     public RecyclerViewAdapter(FragmentActivity activity, List<MenuDataVo> mData) {
+        mLayoutInflater = LayoutInflater.from(activity);
         mcontext = activity;
         this.mData = mData;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recyclerview, parent, false);
-        return new ViewHolder(itemView,mData);
+    public int getItemViewType(int position) {
+        if (mHeaderCount != 0 && position < mHeaderCount) {
+            return ITEM_TYPE_HEADER;//头view
+        } else if (mBottomCount != 0 && position >= (getDataSize() + mHeaderCount)) {
+            return ITEM_TYPE_BOTTOM;//尾view
+        } else {
+            return ITEM_TYPE_CONTENT;
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        MenuDataVo ListData = mData.get(position);
-        holder.getTextView().setText(ListData.getTitle());
-        holder.mTextViewId.setText(String.valueOf(position));
-        holder.mTvTags.setText(ListData.getTags());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == ITEM_TYPE_HEADER) {
+            return new HeaderViewHolder(mLayoutInflater.inflate(R.layout.item_recyclerview_header, parent, false));
+        } else if (viewType == ITEM_TYPE_BOTTOM) {
+            return new BottomViewHolder(mLayoutInflater.inflate(R.layout.item_recyclerview_bottom, parent, false));
+        } else if (viewType == ITEM_TYPE_CONTENT) {
+            View itemView = mLayoutInflater.inflate(R.layout.item_recyclerview, parent, false);
+            return new VViewHolder(itemView, mData);
+        }
+        return null;
 
-        Glide.with(mcontext)
-                .load(ListData.getAlbums().get(0))
-                .placeholder(R.mipmap.ic_launcher)
-                .crossFade()
-                .into(holder.mImg);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof VViewHolder) {
+            MenuDataVo ListData = mData.get(position-1);
+            ((VViewHolder) holder).getTextView().setText(ListData.getTitle());
+            ((VViewHolder) holder).mTextViewId.setText(String.valueOf(position));
+            ((VViewHolder) holder).mTvTags.setText(ListData.getTags());
+
+            Glide.with(mcontext)
+                    .load(ListData.getAlbums().get(0))
+                    .placeholder(R.mipmap.ic_launcher)
+                    .crossFade()
+                    .into(((VViewHolder) holder).mImg);
+        } else if (holder instanceof HeaderViewHolder) {
+
+        } else if (holder instanceof BottomViewHolder) {
+
+        }
     }
 
     @Override
     public int getItemCount() {
+        return getDataSize() + mHeaderCount + mBottomCount;
+    }
+
+
+    public int getDataSize() {
         return mData.size();
     }
 
@@ -65,13 +101,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class VViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTextView;
         private final TextView mTextViewId;
         private final TextView mTvTags;
         private final ImageView mImg;
 
-        public ViewHolder(View itemView, final List<MenuDataVo> mData) {
+        public VViewHolder(View itemView, final List<MenuDataVo> mData) {
             super(itemView);
 
             mTextView = (TextView) itemView.findViewById(R.id.tv_title);
@@ -100,7 +136,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     new SweetAlertDialog(mcontext, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("你确定?")
-                            .setContentText("FisterActivity".substring(6,14).replace("A","a"))
+                            .setContentText("FisterActivity".substring(6, 14).replace("A", "a"))
                             .setCancelText("取消")
                             .setConfirmText("是的")
                             .showCancelButton(true)
@@ -128,8 +164,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         }
 
+
         public TextView getTextView() {
             return mTextView;
+        }
+    }
+
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public HeaderViewHolder(View headerView) {
+            super(headerView);
+        }
+    }
+
+    public class BottomViewHolder extends RecyclerView.ViewHolder {
+        public BottomViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

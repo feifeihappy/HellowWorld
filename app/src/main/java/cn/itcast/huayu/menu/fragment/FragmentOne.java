@@ -104,6 +104,7 @@ public class FragmentOne extends BaseFragment {
             mData = result.getResult().getData();
             setAdapter();
         } catch (Exception e) {
+            hideLoadingDialog();
             showToas(e.toString());
         }
     }
