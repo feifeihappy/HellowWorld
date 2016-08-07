@@ -22,6 +22,9 @@ import cn.itcast.huayu.menu.fragment.FragmentThree;
 import cn.itcast.huayu.menu.fragment.FragmentTwo;
 import cn.itcast.huayu.menu.util.LogUtil;
 
+/**
+ * 主activity
+ */
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements BDLocationListener {
 
