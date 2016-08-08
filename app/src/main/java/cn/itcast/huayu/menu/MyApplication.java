@@ -2,6 +2,7 @@ package cn.itcast.huayu.menu;
 
 import android.app.Application;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.androidannotations.annotations.EApplication;
@@ -20,6 +21,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        SDKInitializer.initialize(getApplicationContext());
         CrashReport.initCrashReport(getApplicationContext(), "7e8f387dbf", true);
         initCache();
 

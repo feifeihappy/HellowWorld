@@ -15,6 +15,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
+
 import cn.itcast.huayu.menu.MyApplication;
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.activity.MainActivity;
@@ -28,7 +39,7 @@ import de.greenrobot.event.ThreadMode;
 /**
  * @author ln：zpf on 2016/7/29
  */
-public class FragmentThree extends BaseFragment {
+public class FragmentThree extends BaseFragment implements BDLocationListener{
     public static FragmentThree instance = null;
     public final int msgkey = 1;
     public final int msgToast = 2;
@@ -58,6 +69,10 @@ public class FragmentThree extends BaseFragment {
     private boolean isWatchState = false;
     private Thread mmmWatchThreads;
     private TextView mTvLocation;
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
+    private LocationClient mLocClient;
+    private boolean isFirstLoc = true;//是否是首次定位
 
     public FragmentThree() {
     }
@@ -72,11 +87,29 @@ public class FragmentThree extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
+
         View view = inflater.inflate(R.layout.fragment_three, container, false);
         mTvTime = (TextView) view.findViewById(R.id.tv_time);
         mButtonWatch = (Button) view.findViewById(R.id.bt_button);
         mBtLight = (Button) view.findViewById(R.id.bt_light);
         mTvLocation = (TextView) view.findViewById(R.id.tv_location);
+
+        // 地图初始化
+        mMapView = (MapView) view. findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
+        // 开启定位图层
+        mBaiduMap.setMyLocationEnabled(true);
+        // 定位初始化
+        mLocClient = new LocationClient(getActivity());
+        mLocClient.registerLocationListener(FragmentThree.this);
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(1000);
+        mLocClient.setLocOption(option);
+        mLocClient.start();
+
         mCamera = Camera.open();
         return view;
     }
@@ -84,7 +117,6 @@ public class FragmentThree extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
         mButtonWatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,10 +155,7 @@ public class FragmentThree extends BaseFragment {
         });
 
 
-        // 注册广播
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Common.LOCATION_ACTION);
-        getActivity().registerReceiver(new LocationBroadcastReceiver(), filter);
+
         StringBuffer mLocation = GlobalCache.newInstance().getmLocation();
         //获取定位位置
         mTvLocation.setText(mLocation);
@@ -135,22 +164,29 @@ public class FragmentThree extends BaseFragment {
 
     }
 
-    class LocationBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (!intent.getAction().equals(Common.LOCATION_ACTION))
-                return;
-            String locationInfo = intent.getStringExtra(Common.LOCATION);
-//            getActivity().unregisterReceiver(this);// 不需要时注销
+    @Override
+    public void onReceiveLocation(BDLocation location) {
+        // map view 销毁后不在处理新接收的位置
+        if (location == null || mMapView == null) {
+            return;
         }
+        MyLocationData locData = new MyLocationData.Builder()
+                .accuracy(location.getRadius())
+                // 此处设置开发者获取到的方向信息，顺时针0-360
+                .direction(100).latitude(location.getLatitude())
+                .longitude(location.getLongitude()).build();
+        mBaiduMap.setMyLocationData(locData);
+        if (isFirstLoc) {
+            isFirstLoc = false;
+            LatLng ll = new LatLng(location.getLatitude(),
+                    location.getLongitude());
+            MapStatus.Builder builder = new MapStatus.Builder();
+            builder.target(ll).zoom(18.0f);
+            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        }
+
     }
 
-    class Common {
-
-        public static final String LOCATION = "location";
-        public static final String LOCATION_ACTION = "locationAction";
-    }
 
     private class LightThread implements Runnable {
         @Override

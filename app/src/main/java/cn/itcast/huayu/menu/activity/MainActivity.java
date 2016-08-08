@@ -44,9 +44,9 @@ public class MainActivity extends BaseActivity implements BDLocationListener{
     @AfterViews
     void initView() {
         //开启一个服务
-        Intent mIntent = new Intent();
-        mIntent.setClass(this, LocationService.class);
-        startService(mIntent);
+//        Intent mIntent = new Intent();
+//        mIntent.setClass(this, LocationService.class);
+//        startService(mIntent);
 
         mLocationClient = new LocationClient(getApplicationContext());     //第一步，初始化LocationClient类
 //        mLocationClient.registerLocationListener( myListener );    //注册监听函数
@@ -54,7 +54,6 @@ public class MainActivity extends BaseActivity implements BDLocationListener{
         initLocation();//第二步，配置定位SDK参数
         mLocationClient.start();
 
-        System.out.println("视图初始化");
         MyViewPagerAdapter mFragmentAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         mFragmentAdapter.addfragment(FragmentOne.newInstance(), "菜谱");
         mFragmentAdapter.addfragment(FragmentTwo.newInstance(), "天气");
