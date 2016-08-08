@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -31,7 +32,7 @@ import cn.itcast.huayu.menu.util.LogUtil;
  * 主activity
  */
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements BDLocationListener{
+public class MainActivity extends BaseActivity implements BDLocationListener {
 
     @ViewById(R.id.viewpager)
     ViewPager mViewPager;
@@ -77,7 +78,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener{
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span=1000;
+        int span=5000;
         option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener{
         sb.append(bdLocation.getLatitude());
         sb.append(bdLocation.getLongitude());
         sb.append(bdLocation.getCity());
-        LogUtil.getInstance().error(sb.toString());
+        LogUtil.getInstance().error("定位",sb.toString());
         mLocation = sb;
 
         GlobalCache.newInstance().setmLocation(sb);

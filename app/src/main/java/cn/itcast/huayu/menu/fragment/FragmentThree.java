@@ -1,13 +1,10 @@
 package cn.itcast.huayu.menu.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +23,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
-import cn.itcast.huayu.menu.MyApplication;
 import cn.itcast.huayu.menu.R;
-import cn.itcast.huayu.menu.activity.MainActivity;
 import cn.itcast.huayu.menu.cache.GlobalCache;
-import cn.itcast.huayu.menu.model.menu.MenuListData;
 import cn.itcast.huayu.menu.util.ToastUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -85,9 +79,15 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
 
         View view = inflater.inflate(R.layout.fragment_three, container, false);
         mTvTime = (TextView) view.findViewById(R.id.tv_time);
@@ -106,7 +106,7 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(1000);
+        option.setScanSpan(5000);
         mLocClient.setLocOption(option);
         mLocClient.start();
 
@@ -221,5 +221,17 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void helloEventBus(String mLocation) {
 //        mTextView.setText(message.getMenuDataVo().getTitle());
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        // 退出时销毁定位
+        mLocClient.stop();
+        // 关闭定位图层
+        mBaiduMap.setMyLocationEnabled(false);
+        mMapView.onDestroy();
+        mMapView = null;
+        super.onDestroy();
     }
 }

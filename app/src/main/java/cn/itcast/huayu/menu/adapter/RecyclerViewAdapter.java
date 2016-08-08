@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.activity.FisterActivity_;
 import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
+import cn.itcast.huayu.menu.util.LogUtil;
 import cn.itcast.huayu.menu.util.ToastUtil;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.greenrobot.event.EventBus;
@@ -28,18 +30,26 @@ import de.greenrobot.event.EventBus;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static FragmentActivity mcontext;
     private final LayoutInflater mLayoutInflater;
+    static Callback mCallback = null;
     private List<MenuDataVo> mData;
     public static final int ITEM_TYPE_HEADER = 1;
     public static final int ITEM_TYPE_BOTTOM = 2;
     public static final int ITEM_TYPE_CONTENT = 3;
     private int mHeaderCount = 1;
     private int mBottomCount = 1;
+    private View itemView;
 
-    public RecyclerViewAdapter(FragmentActivity activity, List<MenuDataVo> mData) {
+    public RecyclerViewAdapter(FragmentActivity activity, List<MenuDataVo> mData, Callback mCallback) {
         mLayoutInflater = LayoutInflater.from(activity);
         mcontext = activity;
         this.mData = mData;
+        this.mCallback = mCallback;
     }
+
+    public interface Callback {
+        public void viewClick(View v);
+    }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -59,7 +69,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (viewType == ITEM_TYPE_BOTTOM) {
             return new BottomViewHolder(mLayoutInflater.inflate(R.layout.item_recyclerview_bottom, parent, false));
         } else if (viewType == ITEM_TYPE_CONTENT) {
-            View itemView = mLayoutInflater.inflate(R.layout.item_recyclerview, parent, false);
+            itemView = mLayoutInflater.inflate(R.layout.item_recyclerview, parent, false);
+            LogUtil.getInstance().error("对象", String.valueOf(itemView));
             return new VViewHolder(itemView, mData);
         }
         return null;
@@ -69,7 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof VViewHolder) {
-            MenuDataVo ListData = mData.get(position-1);
+            MenuDataVo ListData = mData.get(position - 1);
             ((VViewHolder) holder).getTextView().setText(ListData.getTitle());
             ((VViewHolder) holder).mTextViewId.setText(String.valueOf(position));
             ((VViewHolder) holder).mTvTags.setText(ListData.getTags());
@@ -79,6 +90,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     .placeholder(R.mipmap.ic_launcher)
                     .crossFade()
                     .into(((VViewHolder) holder).mImg);
+            itemView.setTag(position);
+            LogUtil.getInstance().error("对象", String.valueOf(itemView));
+
         } else if (holder instanceof HeaderViewHolder) {
 
         } else if (holder instanceof BottomViewHolder) {
@@ -115,7 +129,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mTvTags = (TextView) itemView.findViewById(R.id.tv_tags);
             mImg = (ImageView) itemView.findViewById(R.id.iv);
 
-
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -127,37 +140,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventBus.getDefault().post(new MenuListData(mData.get(getAdapterPosition())));
-                    ToastUtil.showToast(mcontext, "第" + getPosition() + "item");
-                    //简单的dialog
-                  /*  new SweetAlertDialog(mcontext)
-                            .setTitleText("Here's a message!")
-                            .show();*/
+                    Integer m = (Integer) v.getTag();
+                    mCallback.viewClick(v);
 
-                    new SweetAlertDialog(mcontext, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("你确定?")
-                            .setContentText("FisterActivity".substring(6, 14).replace("A", "a"))
-                            .setCancelText("取消")
-                            .setConfirmText("是的")
-                            .showCancelButton(true)
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.cancel();
-                                }
-                            })
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.cancel();
-                                    Intent intent = new Intent(mcontext, FisterActivity_.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("mData", mData.get(getAdapterPosition()));
-                                    intent.putExtras(bundle);
-                                    mcontext.startActivity(intent);
-                                }
-                            })
-                            .show();
                 }
             });
 
@@ -176,7 +161,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public class BottomViewHolder extends RecyclerView.ViewHolder {
+    public static class BottomViewHolder extends RecyclerView.ViewHolder {
         public BottomViewHolder(View itemView) {
             super(itemView);
         }
