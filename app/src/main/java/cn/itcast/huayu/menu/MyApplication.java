@@ -2,7 +2,6 @@ package cn.itcast.huayu.menu;
 
 import android.app.Application;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.androidannotations.annotations.EApplication;
@@ -21,9 +20,9 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SDKInitializer.initialize(MyApplication.this);//在使用百度SDK各组件之前初始化context信息，传入ApplicationContext
-        CrashReport.initCrashReport(getApplicationContext(), "7e8f387dbf", true);//bugly
+        CrashReport.initCrashReport(getApplicationContext(), "7e8f387dbf", true);
         initCache();
+
     }
 
     public static void initCache() {

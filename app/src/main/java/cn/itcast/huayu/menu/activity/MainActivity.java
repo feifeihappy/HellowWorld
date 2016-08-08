@@ -1,6 +1,9 @@
 package cn.itcast.huayu.menu.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
@@ -13,6 +16,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import cn.itcast.huayu.menu.MyApplication;
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.adapter.MyViewPagerAdapter;
 import cn.itcast.huayu.menu.cache.GlobalCache;
@@ -20,13 +24,14 @@ import cn.itcast.huayu.menu.common.MyLocationListener;
 import cn.itcast.huayu.menu.fragment.FragmentOne;
 import cn.itcast.huayu.menu.fragment.FragmentThree;
 import cn.itcast.huayu.menu.fragment.FragmentTwo;
+import cn.itcast.huayu.menu.service.LocationService;
 import cn.itcast.huayu.menu.util.LogUtil;
 
 /**
  * 主activity
  */
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements BDLocationListener {
+public class MainActivity extends BaseActivity implements BDLocationListener{
 
     @ViewById(R.id.viewpager)
     ViewPager mViewPager;
@@ -34,21 +39,20 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
     TabLayout mTabLayout;
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
-    BDLocationListener instance = new FragmentThree().newInstance();
     private StringBuffer mLocation;
 
     @AfterViews
     void initView() {
         //开启一个服务
-       /* Intent mIntent = new Intent();
+        Intent mIntent = new Intent();
         mIntent.setClass(this, LocationService.class);
-        startService(mIntent);*/
+        startService(mIntent);
 
         mLocationClient = new LocationClient(getApplicationContext());     //第一步，初始化LocationClient类
-        initLocation();//第二步，配置定位SDK参数
-        mLocationClient.registerLocationListener(myListener);    //第三步，实现BDLocationListener接口
+//        mLocationClient.registerLocationListener( myListener );    //注册监听函数
         mLocationClient.registerLocationListener(MainActivity.this);
-        mLocationClient.start();//第四步，开始定位
+        initLocation();//第二步，配置定位SDK参数
+        mLocationClient.start();
 
         System.out.println("视图初始化");
         MyViewPagerAdapter mFragmentAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
@@ -56,7 +60,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         mFragmentAdapter.addfragment(FragmentTwo.newInstance(), "天气");
         mFragmentAdapter.addfragment(FragmentThree.newInstance(), "手机号");
         mViewPager.setAdapter(mFragmentAdapter);
-        //        mViewPager.setOffscreenPageLimit(2);
+//        mViewPager.setOffscreenPageLimit(2);
         mTabLayout.addTab(mTabLayout.newTab().setText("第一个fragment"));//给TabLayout添加Tab
         mTabLayout.addTab(mTabLayout.newTab().setText("第二个fragment"));
         mTabLayout.addTab(mTabLayout.newTab().setText("第三个fragment"));
@@ -69,12 +73,12 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
 
     }
 
-    private void initLocation() {
+    private void initLocation(){
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span = 5000;
+        int span=1000;
         option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -89,7 +93,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
 
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
-        //        longitude and latitude
+//        longitude and latitude
         StringBuffer sb = new StringBuffer(256);
         sb.append(bdLocation.getLatitude());
         sb.append(bdLocation.getLongitude());
@@ -97,9 +101,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         LogUtil.getInstance().error(sb.toString());
         mLocation = sb;
 
-        GlobalCache mGlobalCache = GlobalCache.newInstance();
-        mGlobalCache .setmLocation(sb);
-        mGlobalCache.setisBdLocation(bdLocation);
+        GlobalCache.newInstance().setmLocation(sb);
     }
 }
 
