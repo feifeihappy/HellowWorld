@@ -1,28 +1,18 @@
 package cn.itcast.huayu.menu.adapter;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import java.util.List;
-
 import cn.itcast.huayu.menu.R;
-import cn.itcast.huayu.menu.activity.FisterActivity_;
 import cn.itcast.huayu.menu.model.menu.MenuDataVo;
-import cn.itcast.huayu.menu.model.menu.MenuListData;
 import cn.itcast.huayu.menu.util.LogUtil;
 import cn.itcast.huayu.menu.util.ToastUtil;
-import cn.pedant.SweetAlert.SweetAlertDialog;
-import de.greenrobot.event.EventBus;
 
 /**
  * @author ln：zpf on 2016/7/30
@@ -70,11 +60,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return new BottomViewHolder(mLayoutInflater.inflate(R.layout.item_recyclerview_bottom, parent, false));
         } else if (viewType == ITEM_TYPE_CONTENT) {
             itemView = mLayoutInflater.inflate(R.layout.item_recyclerview, parent, false);
-            LogUtil.getInstance().error("对象", String.valueOf(itemView));
+            LogUtil.getInstance().error(String.valueOf(itemView));
             return new VViewHolder(itemView, mData);
         }
         return null;
-
     }
 
     @Override
@@ -91,7 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     .crossFade()
                     .into(((VViewHolder) holder).mImg);
             itemView.setTag(position);
-            LogUtil.getInstance().error("对象", String.valueOf(itemView));
+            LogUtil.getInstance().error(String.valueOf(itemView));
 
         } else if (holder instanceof HeaderViewHolder) {
 
@@ -148,8 +137,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         }
-
-
         public TextView getTextView() {
             return mTextView;
         }

@@ -68,7 +68,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="cn.itcast.huayu.menu.activity.FisterActivity_"></activity>
+        <activity android:name="cn.itcast.huayu.menu.activity.FisterActivity"></activity>
 
         <service android:name=".service.LocationService"></service>
 

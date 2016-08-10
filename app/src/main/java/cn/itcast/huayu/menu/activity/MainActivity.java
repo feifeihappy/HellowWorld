@@ -1,12 +1,8 @@
 package cn.itcast.huayu.menu.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -17,7 +13,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import cn.itcast.huayu.menu.MyApplication;
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.adapter.MyViewPagerAdapter;
 import cn.itcast.huayu.menu.cache.GlobalCache;
@@ -25,7 +20,6 @@ import cn.itcast.huayu.menu.common.MyLocationListener;
 import cn.itcast.huayu.menu.fragment.FragmentOne;
 import cn.itcast.huayu.menu.fragment.FragmentThree;
 import cn.itcast.huayu.menu.fragment.FragmentTwo;
-import cn.itcast.huayu.menu.service.LocationService;
 import cn.itcast.huayu.menu.util.LogUtil;
 
 /**
@@ -41,14 +35,13 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private StringBuffer mLocation;
-
+    public String curFragmentTag = "";
     @AfterViews
     void initView() {
         //开启一个服务
 //        Intent mIntent = new Intent();
 //        mIntent.setClass(this, LocationService.class);
 //        startService(mIntent);
-
         mLocationClient = new LocationClient(getApplicationContext());     //第一步，初始化LocationClient类
 //        mLocationClient.registerLocationListener( myListener );    //注册监听函数
         mLocationClient.registerLocationListener(MainActivity.this);
@@ -60,7 +53,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         mFragmentAdapter.addfragment(FragmentTwo.newInstance(), "天气");
         mFragmentAdapter.addfragment(FragmentThree.newInstance(), "手机号");
         mViewPager.setAdapter(mFragmentAdapter);
-//        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(2);
         mTabLayout.addTab(mTabLayout.newTab().setText("第一个fragment"));//给TabLayout添加Tab
         mTabLayout.addTab(mTabLayout.newTab().setText("第二个fragment"));
         mTabLayout.addTab(mTabLayout.newTab().setText("第三个fragment"));
@@ -70,7 +63,6 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
     }
 
     private void initLocation(){
@@ -98,7 +90,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         sb.append(bdLocation.getLatitude());
         sb.append(bdLocation.getLongitude());
         sb.append(bdLocation.getCity());
-        LogUtil.getInstance().error("定位",sb.toString());
+        LogUtil.getInstance().error(sb.toString());
         mLocation = sb;
 
         GlobalCache.newInstance().setmLocation(sb);

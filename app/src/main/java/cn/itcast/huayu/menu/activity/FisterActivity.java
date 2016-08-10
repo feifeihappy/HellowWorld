@@ -13,11 +13,10 @@ import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 /**
  * @author ln：zpf on 2016/7/26
  */
-@EActivity(R.layout.activity_first)
 public class FisterActivity extends BaseActivity {
 
 
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -28,6 +27,7 @@ public class FisterActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_first);
     }
 
     @Override
@@ -39,8 +39,6 @@ public class FisterActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MenuDataVo mData = (MenuDataVo) getIntent().getSerializableExtra("mData");
-        TextView mTextView = (TextView) findViewById(R.id.tv_first);
-        mTextView.setText(mData.getTitle());
 
     }
 
@@ -49,4 +47,8 @@ public class FisterActivity extends BaseActivity {
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

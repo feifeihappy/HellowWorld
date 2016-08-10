@@ -1,5 +1,6 @@
 package cn.itcast.huayu.menu.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,13 +22,14 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import cn.itcast.huayu.menu.R;
-import cn.itcast.huayu.menu.activity.FisterActivity_;
+import cn.itcast.huayu.menu.activity.FisterActivity;
 import cn.itcast.huayu.menu.adapter.RecyclerViewAdapter;
 import cn.itcast.huayu.menu.common.DividerItemDecoration;
 import cn.itcast.huayu.menu.model.ResponseBaseEntity;
 import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
 import cn.itcast.huayu.menu.model.menu.MenuResult;
+import cn.itcast.huayu.menu.util.LogUtil;
 import cn.itcast.huayu.menu.util.ToastUtil;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.greenrobot.event.EventBus;
@@ -37,9 +39,9 @@ import de.greenrobot.event.EventBus;
  */
 @EFragment(R.layout.fragment_one)
 public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Callback {
+    public static final int FISTERACTIVITY = 1;
     private static final int DATA_COUNT = 60;
     public static FragmentOne_ instance = null;
-
     @ViewById(R.id.recyclerView)
     RecyclerView mRecyclerView;
     List<MenuDataVo> mData = null;
@@ -175,17 +177,41 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         sweetAlertDialog.cancel();
-                        Intent intent = new Intent(getActivity(), FisterActivity_.class);
+                        Intent intent = new Intent(getActivity(), FisterActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("mData", mData.get(mDataPosition));
                         intent.putExtras(bundle);
-                        startActivity(intent);
+                        startActivityForResult(intent, FISTERACTIVITY);
                     }
                 })
                 .show();
     }
 
-//    @Click(R.id.bt_button)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case FISTERACTIVITY:
+                if (resultCode == Activity.RESULT_OK){
+
+                    Bundle b = data.getExtras();
+                    String m = b.getString("FisterActivity");
+                    LogUtil.getInstance().debug(m);
+                    ToastUtil.showToast(getActivity(),m);
+                }else {
+                    return;
+                }
+                break;
+            default:
+                break;
+
+        }
+
+
+    }
+
+
+    //    @Click(R.id.bt_button)
 //    void clickButton() {
 //        weatherData();
 //    }

@@ -36,8 +36,7 @@ public class LogUtil {
         }
     }
 
-    public void error(String string ,String msg){
-        TAG = string;
+    public void error(String msg){
         if(DEBUG){
             Log.e(TAG,msg);
         }
