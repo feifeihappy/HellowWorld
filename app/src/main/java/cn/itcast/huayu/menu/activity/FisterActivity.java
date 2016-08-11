@@ -49,7 +49,6 @@ public class FisterActivity extends BaseActivity {
         // 在WebView中打开链接（默认行为是使用浏览器，设置此项后都用WebView打开）
         mWebView.setWebViewClient(new WebViewClient());
 
-
     }
 
     @Override

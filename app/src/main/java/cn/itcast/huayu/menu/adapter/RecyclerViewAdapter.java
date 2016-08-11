@@ -121,7 +121,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-
                     ToastUtil.showToast(mcontext, "第" + getPosition() + "item");
                     return true;
                 }

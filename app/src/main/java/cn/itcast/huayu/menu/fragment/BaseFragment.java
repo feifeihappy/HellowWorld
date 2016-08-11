@@ -17,6 +17,7 @@ import org.androidannotations.annotations.rest.RestService;
 import cn.itcast.huayu.menu.MyApplication;
 import cn.itcast.huayu.menu.network.Menu;
 import cn.itcast.huayu.menu.network.WeatherService;
+import cn.itcast.huayu.menu.util.ToastUtil;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -103,4 +104,18 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    @UiThread
+    public void showToast(String string){
+        if (this!= null ){
+            ToastUtil.showToast(getActivity(),string);
+        }
+
+    }
+    @UiThread
+    public void showLongToast(String string){
+        if (this!= null ){
+            ToastUtil.LongToast(getActivity(),string);
+        }
+
+    }
 }

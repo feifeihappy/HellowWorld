@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +21,9 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.activity.FisterActivity;
@@ -38,7 +42,7 @@ import de.greenrobot.event.EventBus;
  * @author ln：zpf on 2016/7/29
  */
 @EFragment(R.layout.fragment_one)
-public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Callback {
+public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Callback, SwipeRefreshLayout.OnRefreshListener {
     public static final int FISTERACTIVITY = 1;
     private static final int DATA_COUNT = 60;
     public static FragmentOne_ instance = null;
@@ -47,6 +51,9 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
     List<MenuDataVo> mData = null;
     private RecyclerViewAdapter mRecyclerViewAdapter;
     private EditText mEditContent;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private List<String> mLIst;
+    private int mNum;
 
     public FragmentOne() {
     }
@@ -79,13 +86,48 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
     @Override
     public void onStart() {
         super.onStart();
-
+        //集合
+        mLIst = new ArrayList<>();
+        mLIst.add("酸");
+        mLIst.add("甜");
+        mLIst.add("苦");
+        mLIst.add("辣");
+        mLIst.add("鲁菜");
+        mLIst.add("川菜");
+        mLIst.add("粤菜");
+        mLIst.add("面");
+        mLIst.add("包子");
+        mLIst.add("饺子");
+        mLIst.add("上海");
     }
 
     @Override
     public void onResume() {
         super.onResume();
 //        DataRequest();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe);
+        mSwipeRefreshLayout.setOnRefreshListener(FragmentOne.this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        //第一次进入界面立即刷新
+        mSwipeRefreshLayout.measure(0, 0);
+        mSwipeRefreshLayout.setRefreshing(true);
+        SwipeRefreshLayout.OnRefreshListener mListener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        DataRequest("酸");
+                    }
+                }, 2000);
+            }
+        };
+        mListener.onRefresh();
+        ToastUtil.showToast(getActivity(), "加载:FragmentOne_onResume调用'酸这个接口'");
         mEditContent = (EditText) getView().findViewById(R.id.edit_content);
         Button mBtCommit = (Button) getView().findViewById(R.id.bt_commit);
         //EditText不弹出软键盘
@@ -121,13 +163,19 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
 
     @UiThread
     void setAdapter() {
-        hideLoadingDialog();
-        mRecyclerViewAdapter = new RecyclerViewAdapter(getActivity(), mData, FragmentOne.this);
-        mRecyclerView.setAdapter(mRecyclerViewAdapter);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                DividerItemDecoration.VERTICAL_LIST));
+        if (mRecyclerViewAdapter != null) {
+            hideLoadingDialog();
+            mRecyclerViewAdapter.setData(mData);
+            mRecyclerViewAdapter.notifyDataSetChanged();
+        } else {
+            hideLoadingDialog();
+            mRecyclerViewAdapter = new RecyclerViewAdapter(getActivity(), mData, FragmentOne.this);
+            mRecyclerView.setAdapter(mRecyclerViewAdapter);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+                    DividerItemDecoration.VERTICAL_LIST));
+        }
     }
 
     @Override
@@ -192,24 +240,40 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FISTERACTIVITY:
-                if (resultCode == Activity.RESULT_OK){
+                if (resultCode == Activity.RESULT_OK) {
 
                     Bundle b = data.getExtras();
                     String m = b.getString("FisterActivity");
                     LogUtil.getInstance().debug(m);
-                    ToastUtil.showToast(getActivity(),m);
-                }else {
+                    ToastUtil.showToast(getActivity(), m);
+                } else {
                     return;
                 }
                 break;
             default:
                 break;
-
         }
-
-
     }
 
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //生成随机菜单
+                String mMenu = getRandomMenu();
+                showLongToast("刷新后调用随机接口" +String.valueOf(mNum) +mMenu);
+                mSwipeRefreshLayout.setRefreshing(false);
+                DataRequest(mMenu);
+            }
+        }, 2000);
+    }
+
+    private String getRandomMenu() {
+        Random mRandom = new Random();
+         mNum = mRandom.nextInt(11);
+        return mLIst.get(mNum);
+    }
 
     //    @Click(R.id.bt_button)
 //    void clickButton() {

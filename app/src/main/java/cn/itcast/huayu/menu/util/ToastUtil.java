@@ -3,6 +3,8 @@ package cn.itcast.huayu.menu.util;
 import android.content.Context;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.UiThread;
+
 /**
  * @author ln：zpf on 2016/7/30
  */
