@@ -40,6 +40,7 @@
         android:name="android.hardware.camera"
         android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <!-- 读取日志信息 -->
     <uses-permission android:name="android.permission.READ_LOGS" />
     <!-- 电源管理权限 -->
@@ -68,7 +69,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="cn.itcast.huayu.menu.activity.FisterActivity"></activity>
+        <activity android:name=".activity.MenuActivity"></activity>
+
+        <activity android:name=".activity.WebViewActivity"></activity>
 
         <service android:name=".service.LocationService"></service>
 

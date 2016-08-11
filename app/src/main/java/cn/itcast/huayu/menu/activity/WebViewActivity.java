@@ -13,7 +13,7 @@ import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 /**
  * @author ln：zpf on 2016/7/26
  */
-public class FisterActivity extends BaseActivity {
+public class WebViewActivity extends BaseActivity {
 
     Handler mHandler = new Handler() {
         @Override
@@ -27,7 +27,7 @@ public class FisterActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
+        setContentView(R.layout.activity_webview);
 
     }
 

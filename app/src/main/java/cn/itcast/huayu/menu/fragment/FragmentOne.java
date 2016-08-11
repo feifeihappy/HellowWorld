@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 
 import cn.itcast.huayu.menu.R;
-import cn.itcast.huayu.menu.activity.FisterActivity;
+import cn.itcast.huayu.menu.activity.MenuActivity;
 import cn.itcast.huayu.menu.adapter.RecyclerViewAdapter;
 import cn.itcast.huayu.menu.common.DividerItemDecoration;
 import cn.itcast.huayu.menu.model.ResponseBaseEntity;
@@ -42,7 +42,8 @@ import de.greenrobot.event.EventBus;
  * @author ln：zpf on 2016/7/29
  */
 @EFragment(R.layout.fragment_one)
-public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Callback, SwipeRefreshLayout.OnRefreshListener {
+public class FragmentOne extends BaseFragment implements
+        RecyclerViewAdapter.Callback, SwipeRefreshLayout.OnRefreshListener {
     public static final int FISTERACTIVITY = 1;
     private static final int DATA_COUNT = 60;
     public static FragmentOne_ instance = null;
@@ -80,6 +81,7 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -104,7 +106,16 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
     @Override
     public void onResume() {
         super.onResume();
-//        DataRequest();
+        initView();
+
+    }
+
+    protected void initView() {
+        //EditText不弹出软键盘
+
+        hideKeyboard();
+
+        //        DataRequest();
         mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe);
         mSwipeRefreshLayout.setOnRefreshListener(FragmentOne.this);
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark,
@@ -129,11 +140,9 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
         mListener.onRefresh();
         ToastUtil.showToast(getActivity(), "加载:FragmentOne_onResume调用'酸这个接口'");
         mEditContent = (EditText) getView().findViewById(R.id.edit_content);
+        mEditContent.clearFocus();
         Button mBtCommit = (Button) getView().findViewById(R.id.bt_commit);
-        //EditText不弹出软键盘
-        InputMethodManager imm = (InputMethodManager) getActivity()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mEditContent.getWindowToken(), 0);
+
 
         mBtCommit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +156,14 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
                 }
             }
         });
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = ( InputMethodManager ) getView().getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+        if ( imm.isActive( ) ) {
+            imm.hideSoftInputFromWindow( getView().getApplicationWindowToken( ) , 0 );
+
+        }
     }
 
     @Background
@@ -211,7 +228,7 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
 
         new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("你确定?")
-                .setContentText("FisterActivity".substring(6, 14).replace("A", "a"))
+                .setContentText("MenuActivity".substring(4, 12).replace("A", "a"))
                 .setCancelText("取消")
                 .setConfirmText("是的")
                 .showCancelButton(true)
@@ -225,7 +242,7 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         sweetAlertDialog.cancel();
-                        Intent intent = new Intent(getActivity(), FisterActivity.class);
+                        Intent intent = new Intent(getActivity(), MenuActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("mData", mData.get(mDataPosition));
                         intent.putExtras(bundle);
@@ -243,7 +260,7 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
                 if (resultCode == Activity.RESULT_OK) {
 
                     Bundle b = data.getExtras();
-                    String m = b.getString("FisterActivity");
+                    String m = b.getString("MenuActivity");
                     LogUtil.getInstance().debug(m);
                     ToastUtil.showToast(getActivity(), m);
                 } else {
@@ -262,7 +279,7 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
             public void run() {
                 //生成随机菜单
                 String mMenu = getRandomMenu();
-                showLongToast("刷新后调用随机接口" +String.valueOf(mNum) +mMenu);
+                showLongToast("刷新后调用随机接口" + String.valueOf(mNum) + mMenu);
                 mSwipeRefreshLayout.setRefreshing(false);
                 DataRequest(mMenu);
             }
@@ -271,7 +288,7 @@ public class FragmentOne extends BaseFragment implements RecyclerViewAdapter.Cal
 
     private String getRandomMenu() {
         Random mRandom = new Random();
-         mNum = mRandom.nextInt(11);
+        mNum = mRandom.nextInt(11);
         return mLIst.get(mNum);
     }
 

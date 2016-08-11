@@ -1,6 +1,7 @@
 package cn.itcast.huayu.menu.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
@@ -36,6 +37,56 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
     public BDLocationListener myListener = new MyLocationListener();
     private StringBuffer mLocation;
     public String curFragmentTag = "";
+    /**     back键
+     *  Android的程序无需刻意的去退出,当你一按下手机的back键的时候，
+     系统会默认调用程序栈中最上层Activity的Destroy()方法来， 销毁当前Activity。当此Activity又被其它Activity启动起来的时候,
+     会重新调用OnCreate()方法进行创建,当栈中所有 Activity都弹出结束后,应用也就随之结束了.
+     如果说程序中存在service之类的,则可以在恰当的位置监听处理下也就可以了.
+     */
+
+    /**
+     *      home键
+     Android程序的隐藏,当你按下手机的Home键的时候,系统会默认调用程序栈中最上层Activity的stop()方法,
+     然后整个应用程序都会被 隐藏起来,当你再次点击手机桌面上应用程序图标时,
+     系统会调用最上层Activity的OnResume()方法,此时不会重新打开程序,而是直接进入, 会直接显示程序栈中最上层的Activity。
+     *
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LogUtil.getInstance().error("onCreate");
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogUtil.getInstance().error("onStart");
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtil.getInstance().error("onResume");
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LogUtil.getInstance().error("onStop");
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LogUtil.getInstance().error("onDestroy");
+
+    }
+
+
+
     @AfterViews
     void initView() {
         //开启一个服务
@@ -90,7 +141,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         sb.append(bdLocation.getLatitude());
         sb.append(bdLocation.getLongitude());
         sb.append(bdLocation.getCity());
-        LogUtil.getInstance().error(sb.toString());
+//        LogUtil.getInstance().error(sb.toString());
         mLocation = sb;
 
         GlobalCache.newInstance().setmLocation(sb);

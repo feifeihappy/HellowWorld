@@ -1,5 +1,6 @@
 package cn.itcast.huayu.menu.fragment;
 
+import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import cn.itcast.huayu.menu.R;
+import cn.itcast.huayu.menu.activity.WebViewActivity;
 import cn.itcast.huayu.menu.cache.GlobalCache;
 import cn.itcast.huayu.menu.util.ToastUtil;
 import de.greenrobot.event.EventBus;
@@ -117,6 +119,11 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
     @Override
     public void onResume() {
         super.onResume();
+        initView();
+
+    }
+
+    protected void initView() {
         mButtonWatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,13 +162,20 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
         });
 
 
-
         StringBuffer mLocation = GlobalCache.newInstance().getmLocation();
         //获取定位位置
         mTvLocation.setText(mLocation);
 
+        //webView
+        Button mButWebView = (Button) getView().findViewById(R.id.bt_webview);
+        mButWebView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                startActivity(intent);
 
-
+            }
+        });
     }
 
     @Override

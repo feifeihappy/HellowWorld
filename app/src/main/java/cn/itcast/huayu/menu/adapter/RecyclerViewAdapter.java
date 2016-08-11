@@ -80,8 +80,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     .crossFade()
                     .into(((VViewHolder) holder).mImg);
             itemView.setTag(position);
-            LogUtil.getInstance().error(String.valueOf(itemView));
-
         } else if (holder instanceof HeaderViewHolder) {
 
         } else if (holder instanceof BottomViewHolder) {
