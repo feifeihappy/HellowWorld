@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +47,9 @@ public class FragmentOne extends BaseFragment implements
         RecyclerViewAdapter.Callback, SwipeRefreshLayout.OnRefreshListener {
     public static final int FISTERACTIVITY = 1;
     private static final int DATA_COUNT = 60;
+
+
+    private static final int SET_ENABLED = 2;
     public static FragmentOne_ instance = null;
     @ViewById(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -55,6 +59,27 @@ public class FragmentOne extends BaseFragment implements
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<String> mLIst;
     private int mNum;
+    private int i = 1;
+    private Button mBtCommit;
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case SET_ENABLED:
+                    setEnabled(mBtCommit, true);
+                    break;
+                case 3:
+
+                    break;
+                default:
+                    break;
+
+            }
+        }
+
+    };
 
     public FragmentOne() {
     }
@@ -141,12 +166,16 @@ public class FragmentOne extends BaseFragment implements
         ToastUtil.showToast(getActivity(), "加载:FragmentOne_onResume调用'酸这个接口'");
         mEditContent = (EditText) getView().findViewById(R.id.edit_content);
         mEditContent.clearFocus();
-        Button mBtCommit = (Button) getView().findViewById(R.id.bt_commit);
+        mBtCommit = (Button) getView().findViewById(R.id.bt_commit);
 
 
         mBtCommit.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
+                setEnabled(mBtCommit, false);
+
                 final String mContent = mEditContent.getText().toString();
                 if (!mContent.equals("")) {
                     showloadingDialog();
@@ -154,14 +183,24 @@ public class FragmentOne extends BaseFragment implements
                 } else {
                     ToastUtil.showToast(getActivity(), "请输入内容");
                 }
+                long j = i++;
+                LogUtil.getInstance().error(String.valueOf(j));
             }
         });
     }
 
+    private void setEnabled(View view, boolean enabled) {
+        if (enabled) {
+            view.setEnabled(true);
+        } else {
+            view.setEnabled(false);
+        }
+    }
+
     private void hideKeyboard() {
-        InputMethodManager imm = ( InputMethodManager ) getView().getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
-        if ( imm.isActive( ) ) {
-            imm.hideSoftInputFromWindow( getView().getApplicationWindowToken( ) , 0 );
+        InputMethodManager imm = (InputMethodManager) getView().getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(getView().getApplicationWindowToken(), 0);
 
         }
     }
@@ -175,6 +214,7 @@ public class FragmentOne extends BaseFragment implements
         } catch (Exception e) {
             hideLoadingDialog();
             showToas(e.toString());
+            mHandler.obtainMessage(SET_ENABLED).sendToTarget();
         }
     }
 
@@ -193,6 +233,8 @@ public class FragmentOne extends BaseFragment implements
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                     DividerItemDecoration.VERTICAL_LIST));
         }
+
+        setEnabled(mBtCommit, true);
     }
 
     @Override
@@ -212,12 +254,17 @@ public class FragmentOne extends BaseFragment implements
 
     /**
      * RecyclerViewAdapter的回调函数
-     *
-     * @param v
+     *  @param v
+     * @param itemId
+     * @param layoutPosition
      */
     @Override
-    public void viewClick(View v) {
+    public void viewClick(View v, int AdapterPosition, long itemId, int layoutPosition) {
         final Integer mItemViewPosition = (Integer) v.getTag();
+        LogUtil.getInstance().error("mItemViewPositionv_________"+String.valueOf(AdapterPosition)
+                +"_____AdapterPosition______"+String.valueOf(mItemViewPosition)+
+                "___itemId____"+String.valueOf(itemId)+"__layoutPosition___"+String.valueOf(layoutPosition));
+
         final int mDataPosition = mItemViewPosition - 1;//数据的位置
         EventBus.getDefault().post(new MenuListData(mData.get(mDataPosition)));
         ToastUtil.showToast(getActivity(), "第" + mItemViewPosition + "item");

@@ -5,10 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
+
 import java.util.List;
+
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 import cn.itcast.huayu.menu.util.LogUtil;
@@ -37,7 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public interface Callback {
-        public void viewClick(View v);
+        public void viewClick(View v, int AdapterPosition, long itemId, int layoutPosition);
     }
 
 
@@ -70,7 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof VViewHolder) {
             MenuDataVo ListData = mData.get(position - 1);
-            ((VViewHolder) holder).getTextView().setText(ListData.getTitle());
+            ((VViewHolder) holder).mTextView.setText(ListData.getTitle());
             ((VViewHolder) holder).mTextViewId.setText(String.valueOf(position));
             ((VViewHolder) holder).mTvTags.setText(ListData.getTags());
 
@@ -102,7 +106,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    public static class VViewHolder extends RecyclerView.ViewHolder {
+    public static class VViewHolder
+            extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mTextView;
         private final TextView mTextViewId;
         private final TextView mTvTags;
@@ -127,15 +132,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     Integer m = (Integer) v.getTag();
-                    mCallback.viewClick(v);
+                    mCallback.viewClick(v, getAdapterPosition(),getItemId(),getLayoutPosition());
 
                 }
             });
-
-
         }
-        public TextView getTextView() {
-            return mTextView;
+
+        @Override
+        public void onClick(View v) {
+
+
         }
     }
 

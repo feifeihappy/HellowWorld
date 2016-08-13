@@ -72,7 +72,6 @@ public class MenuAdapter extends BaseAdapter {
         Glide
                 .with(menuActivity)
                 .load(stepsDataValue.getImg())
-                .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .crossFade()
                 .into(holder.ivImg);

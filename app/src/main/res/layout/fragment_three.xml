@@ -33,6 +33,11 @@
             android:background="@color/palevioletred"
             android:text="打开WebView" />
 
+        <CheckBox
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true" />
 
     </LinearLayout>
 
