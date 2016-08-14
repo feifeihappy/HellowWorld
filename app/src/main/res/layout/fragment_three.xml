@@ -39,6 +39,13 @@
             android:layout_height="wrap_content"
             android:checked="true" />
 
+        <Button
+            android:id="@+id/bt_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="第四个fragment"
+            />
+
     </LinearLayout>
 
     <Button

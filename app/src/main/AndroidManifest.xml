@@ -72,6 +72,7 @@
         <activity android:name=".activity.MenuActivity"></activity>
 
         <activity android:name=".activity.WebViewActivity"></activity>
+        <activity android:name=".activity.FourActivity"></activity>
 
         <service android:name=".service.LocationService"></service>
 

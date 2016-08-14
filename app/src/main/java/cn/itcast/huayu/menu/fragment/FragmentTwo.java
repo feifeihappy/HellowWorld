@@ -57,7 +57,6 @@ public class FragmentTwo extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -112,6 +111,6 @@ public class FragmentTwo extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void helloEventBus(MenuListData message) {
-        mTextView.setText(message.getMenuDataVo().getTitle());
+        mTextView.setText(message.menuDataVo.getTitle());
     }
 }

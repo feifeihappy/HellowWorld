@@ -1,9 +1,13 @@
 package cn.itcast.huayu.menu.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -22,6 +26,7 @@ import cn.itcast.huayu.menu.fragment.FragmentOne;
 import cn.itcast.huayu.menu.fragment.FragmentThree;
 import cn.itcast.huayu.menu.fragment.FragmentTwo;
 import cn.itcast.huayu.menu.util.LogUtil;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 主activity
@@ -37,6 +42,8 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
     public BDLocationListener myListener = new MyLocationListener();
     private StringBuffer mLocation;
     public String curFragmentTag = "";
+    private long exitTime = 0;
+
     /**     back键
      *  Android的程序无需刻意的去退出,当你一按下手机的back键的时候，
      系统会默认调用程序栈中最上层Activity的Destroy()方法来， 销毁当前Activity。当此Activity又被其它Activity启动起来的时候,
@@ -45,23 +52,24 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
      */
 
     /**
-     *      home键
-     Android程序的隐藏,当你按下手机的Home键的时候,系统会默认调用程序栈中最上层Activity的stop()方法,
-     然后整个应用程序都会被 隐藏起来,当你再次点击手机桌面上应用程序图标时,
-     系统会调用最上层Activity的OnResume()方法,此时不会重新打开程序,而是直接进入, 会直接显示程序栈中最上层的Activity。
-     *
+     * home键
+     * Android程序的隐藏,当你按下手机的Home键的时候,系统会默认调用程序栈中最上层Activity的stop()方法,
+     * 然后整个应用程序都会被 隐藏起来,当你再次点击手机桌面上应用程序图标时,
+     * 系统会调用最上层Activity的OnResume()方法,此时不会重新打开程序,而是直接进入, 会直接显示程序栈中最上层的Activity。
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtil.getInstance().error("onCreate");
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         LogUtil.getInstance().error("onStart");
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -84,7 +92,6 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         LogUtil.getInstance().error("onDestroy");
 
     }
-
 
 
     @AfterViews
@@ -116,12 +123,12 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void initLocation(){
+    private void initLocation() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span=5000;
+        int span = 5000;
         option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -133,6 +140,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
         mLocationClient.setLocOption(option);
     }
+
 
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
@@ -146,5 +154,72 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
 
         GlobalCache.newInstance().setmLocation(sb);
     }
+
+    /**
+     * //不执行父类onkeydown中的方法
+     * return true ;
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.e("TAG", "onKeyDown: ");
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 监控返回键
+        /*    new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("你确定要退出么？")
+//                    .setContentText("Won't be able to recover this file!")
+                    .setCancelText("取消")
+                    .setConfirmText("确认")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.cancel();
+                            MainActivity.this.finish();
+                        }
+                    })
+                    .show();*/
+            ExitApp();
+            return false;
+        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+            // 监控菜单键
+            Toast.makeText(MainActivity.this, "Menu", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        Log.e("TAG", "onKeyUp: ");
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.e("TAG", "onBackPressed: ");
+
+    }
+    public void ExitApp() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            MainActivity.this.finish();
+        }
+    }
+
+
 }
 

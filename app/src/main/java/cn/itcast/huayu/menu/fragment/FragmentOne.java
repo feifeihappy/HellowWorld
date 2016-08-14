@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.activity.MenuActivity;
 import cn.itcast.huayu.menu.adapter.RecyclerViewAdapter;
@@ -54,6 +57,10 @@ public class FragmentOne extends BaseFragment implements
     @ViewById(R.id.recyclerView)
     RecyclerView mRecyclerView;
     List<MenuDataVo> mData = null;
+    @BindView(R.id.bt_evetntbus)
+    Button btEvetntbus;
+    @BindView(R.id.bt_evetntbustow)
+    Button btEvetntbustow;
     private RecyclerViewAdapter mRecyclerViewAdapter;
     private EditText mEditContent;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -80,6 +87,7 @@ public class FragmentOne extends BaseFragment implements
         }
 
     };
+    private Integer mDataPosition;
 
     public FragmentOne() {
     }
@@ -106,13 +114,15 @@ public class FragmentOne extends BaseFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        ButterKnife.bind(this, super.onCreateView(inflater, container, savedInstanceState));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        ButterKnife.bind(this, getView());
+
         //集合
         mLIst = new ArrayList<>();
         mLIst.add("酸");
@@ -127,6 +137,7 @@ public class FragmentOne extends BaseFragment implements
         mLIst.add("饺子");
         mLIst.add("上海");
     }
+
 
     @Override
     public void onResume() {
@@ -210,6 +221,7 @@ public class FragmentOne extends BaseFragment implements
         try {
             ResponseBaseEntity<MenuResult> result = mMenuService.getMenu(mContent, "3d7de91fec4a37c9b9481ea036f59846");
             mData = result.getResult().getData();
+            mDataPosition = null;
             setAdapter();
         } catch (Exception e) {
             hideLoadingDialog();
@@ -254,20 +266,20 @@ public class FragmentOne extends BaseFragment implements
 
     /**
      * RecyclerViewAdapter的回调函数
-     *  @param v
+     *
+     * @param v
      * @param itemId
      * @param layoutPosition
      */
     @Override
     public void viewClick(View v, int AdapterPosition, long itemId, int layoutPosition) {
         final Integer mItemViewPosition = (Integer) v.getTag();
-        LogUtil.getInstance().error("mItemViewPositionv_________"+String.valueOf(AdapterPosition)
-                +"_____AdapterPosition______"+String.valueOf(mItemViewPosition)+
-                "___itemId____"+String.valueOf(itemId)+"__layoutPosition___"+String.valueOf(layoutPosition));
+        LogUtil.getInstance().error("mItemViewPositionv_________" + String.valueOf(AdapterPosition)
+                + "_____AdapterPosition______" + String.valueOf(mItemViewPosition) +
+                "___itemId____" + String.valueOf(itemId) + "__layoutPosition___" + String.valueOf(layoutPosition));
 
-        final int mDataPosition = mItemViewPosition - 1;//数据的位置
-        EventBus.getDefault().post(new MenuListData(mData.get(mDataPosition)));
-        ToastUtil.showToast(getActivity(), "第" + mItemViewPosition + "item");
+        mDataPosition = layoutPosition - 1;//数据的位置
+        ToastUtil.showToast(getActivity(), "第" + layoutPosition + "item");
         //简单的dialog
                   /*  new SweetAlertDialog(mcontext)
                             .setTitleText("Here's a message!")
@@ -339,26 +351,17 @@ public class FragmentOne extends BaseFragment implements
         return mLIst.get(mNum);
     }
 
-    //    @Click(R.id.bt_button)
-//    void clickButton() {
-//        weatherData();
-//    }
-//
-//    @Click(R.id.bt_button_menu)
-//    void clickButtonMenu() {
-//        menuData();
-//    }
-//
-//    @Background
-//    void menuData() {
-//        ResponseBaseEntity<MenuResult> result = mMenuService.getMenu("川菜", "3d7de91fec4a37c9b9481ea036f59846");
-//        List<MenuDataVo> mData = result.getResult().getData();
-//    }
-//
-//    @Background
-//    void weatherData() {
-//        ResponseBaseEntity<WeatherResult> result = mWeatherService.getScantPlan("上海", "bb5336b483148c60699b59df9b926e2f");
-//        String temp = result.getResult().getSk().getTemp();
-//    }
+    @OnClick(R.id.bt_evetntbus)
+    public void onClick() {
+        if (mData != null && mDataPosition != null) {
 
+            EventBus.getDefault().post(new MenuListData(mData.get(mDataPosition)));
+        }
+    }
+
+    @OnClick(R.id.bt_evetntbustow)
+    public void onClickTwo() {
+        EventBus.getDefault().post(new MenuListData(mData.get(mDataPosition)));
+
+    }
 }
