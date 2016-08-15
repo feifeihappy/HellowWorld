@@ -43,20 +43,22 @@ public abstract class BaseActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     @UiThread
     public void showloadingDialog() {

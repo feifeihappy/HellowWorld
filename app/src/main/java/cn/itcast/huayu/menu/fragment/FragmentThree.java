@@ -1,5 +1,6 @@
 package cn.itcast.huayu.menu.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -24,7 +25,10 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.itcast.huayu.menu.R;
+import cn.itcast.huayu.menu.activity.FourActivity;
 import cn.itcast.huayu.menu.activity.WebViewActivity;
 import cn.itcast.huayu.menu.cache.GlobalCache;
 import cn.itcast.huayu.menu.util.ToastUtil;
@@ -35,10 +39,12 @@ import de.greenrobot.event.ThreadMode;
 /**
  * @author ln：zpf on 2016/7/29
  */
-public class FragmentThree extends BaseFragment implements BDLocationListener{
+public class FragmentThree extends BaseFragment implements BDLocationListener {
     public static FragmentThree instance = null;
     public final int msgkey = 1;
     public final int msgToast = 2;
+    @BindView(R.id.bt_fragment)
+    Button btFragment;
     private TextView mTvTime;
     public Handler mHandler = new Handler() {
         @Override
@@ -92,13 +98,15 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_three, container, false);
+        ButterKnife.bind(this, view);
+
         mTvTime = (TextView) view.findViewById(R.id.tv_time);
         mButtonWatch = (Button) view.findViewById(R.id.bt_button);
         mBtLight = (Button) view.findViewById(R.id.bt_light);
         mTvLocation = (TextView) view.findViewById(R.id.tv_location);
 
         // 地图初始化
-        mMapView = (MapView) view. findViewById(R.id.bmapView);
+        mMapView = (MapView) view.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
@@ -173,9 +181,22 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
                 startActivity(intent);
-
             }
         });
+
+        btFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start(getActivity());
+            }
+        });
+
+    }
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, FourActivity.class);
+        starter.putExtra("key", "拿到传过来的值了");
+        context.startActivity(starter);
     }
 
     @Override
@@ -248,4 +269,6 @@ public class FragmentThree extends BaseFragment implements BDLocationListener{
         mMapView = null;
         super.onDestroy();
     }
+
+
 }
