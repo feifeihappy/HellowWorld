@@ -19,13 +19,6 @@ public class MenuListData {
         this.menuDataVo = menuDataVo;
     }
 
-    public static class FragmentOne{
-
-
-
-
-
-    }
 
 
 }
