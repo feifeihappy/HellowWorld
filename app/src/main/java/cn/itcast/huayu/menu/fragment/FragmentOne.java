@@ -339,26 +339,4 @@ public class FragmentOne extends BaseFragment implements
         return mLIst.get(mNum);
     }
 
-    //    @Click(R.id.bt_button)
-//    void clickButton() {
-//        weatherData();
-//    }
-//
-//    @Click(R.id.bt_button_menu)
-//    void clickButtonMenu() {
-//        menuData();
-//    }
-//
-//    @Background
-//    void menuData() {
-//        ResponseBaseEntity<MenuResult> result = mMenuService.getMenu("川菜", "3d7de91fec4a37c9b9481ea036f59846");
-//        List<MenuDataVo> mData = result.getResult().getData();
-//    }
-//
-//    @Background
-//    void weatherData() {
-//        ResponseBaseEntity<WeatherResult> result = mWeatherService.getScantPlan("上海", "bb5336b483148c60699b59df9b926e2f");
-//        String temp = result.getResult().getSk().getTemp();
-//    }
-
 }
