@@ -33,6 +33,7 @@ import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.activity.MenuActivity;
 import cn.itcast.huayu.menu.adapter.RecyclerViewAdapter;
 import cn.itcast.huayu.menu.common.DividerItemDecoration;
+import cn.itcast.huayu.menu.common.EventMessageCode;
 import cn.itcast.huayu.menu.model.ResponseBaseEntity;
 import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
@@ -354,13 +355,13 @@ public class FragmentOne extends BaseFragment implements
     public void onClick() {
         if (mData != null && mDataPosition != null) {
 
-            EventBus.getDefault().post(new MenuListData(mData.get(mDataPosition)));
+            EventBus.getDefault().post(new MenuListData(EventMessageCode.TAG_FRAGMENTONE,mData.get(mDataPosition)));
         }
     }
 
     @OnClick(R.id.bt_evetntbustow)
     public void onClickTwo() {
-        EventBus.getDefault().post(new MenuListData(mData.get(mDataPosition)));
+        EventBus.getDefault().post(new MenuListData(EventMessageCode.TAG_FRAGMENTTOW, mData.get(mDataPosition)));
 
     }
 

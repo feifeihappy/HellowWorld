@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.activity.FourActivity;
 import cn.itcast.huayu.menu.activity.WebViewActivity;
 import cn.itcast.huayu.menu.cache.GlobalCache;
+import cn.itcast.huayu.menu.common.EventMessageCode;
+import cn.itcast.huayu.menu.model.menu.MenuListData;
 import cn.itcast.huayu.menu.util.ToastUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -45,6 +48,8 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
     public final int msgToast = 2;
     @BindView(R.id.bt_fragment)
     Button btFragment;
+    @BindView(R.id.tv_eventbus)
+    TextView tvEventbus;
     private TextView mTvTime;
     public Handler mHandler = new Handler() {
         @Override
@@ -253,10 +258,6 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
-    public void helloEventBus(String mLocation) {
-//        mTextView.setText(message.getMenuDataVo().getTitle());
-    }
 
     @Override
     public void onDestroy() {
@@ -270,5 +271,11 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
         super.onDestroy();
     }
 
-
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void helloEventBus(MenuListData message) {
+        if (message.tagFragmentone == EventMessageCode.TAG_FRAGMENTTOW){
+            tvEventbus.setText(message.menuDataVo.getTitle());
+        }
+        Log.e("TAG", "helloEventBus:FragmentThree");
+    }
 }

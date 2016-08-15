@@ -46,6 +46,14 @@
             android:text="第四个fragment"
             />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tv_eventbus" />
+
+
     </LinearLayout>
 
     <Button

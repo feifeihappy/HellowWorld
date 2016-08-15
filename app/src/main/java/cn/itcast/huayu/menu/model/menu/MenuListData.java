@@ -4,6 +4,7 @@ package cn.itcast.huayu.menu.model.menu;
  * @author ln：zpf on 2016/8/3
  */
 public class MenuListData {
+    public  static int tagFragmentone;
     /**
      * 关于final的重要知识点
      * <p/>
@@ -13,12 +14,12 @@ public class MenuListData {
      * 4.将类、方法、变量声明为final能够提高性能，这样JVM就有机会进行估计，然后优化
      * 5.按照Java代码惯例，final变量就是常量，而且通常常量名要大写
      */
-    public MenuDataVo menuDataVo;
+    public static  MenuDataVo menuDataVo;
 
-    public MenuListData(MenuDataVo menuDataVo) {
+    public MenuListData(int tagFragmentone, MenuDataVo menuDataVo) {
+        this.tagFragmentone = tagFragmentone;
         this.menuDataVo = menuDataVo;
     }
-
 
 
 }

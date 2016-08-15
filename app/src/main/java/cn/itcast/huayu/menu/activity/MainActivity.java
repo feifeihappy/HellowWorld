@@ -1,8 +1,12 @@
 package cn.itcast.huayu.menu.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -25,6 +29,7 @@ import cn.itcast.huayu.menu.common.MyLocationListener;
 import cn.itcast.huayu.menu.fragment.FragmentOne;
 import cn.itcast.huayu.menu.fragment.FragmentThree;
 import cn.itcast.huayu.menu.fragment.FragmentTwo;
+import cn.itcast.huayu.menu.service.MusicService;
 import cn.itcast.huayu.menu.util.LogUtil;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -34,22 +39,44 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements BDLocationListener {
 
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
+    public String curFragmentTag = "";
     @ViewById(R.id.viewpager)
     ViewPager mViewPager;
     @ViewById(R.id.tabLayout)
     TabLayout mTabLayout;
-    public LocationClient mLocationClient = null;
-    public BDLocationListener myListener = new MyLocationListener();
+
+    private MusicService mMusicService;
+    final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.e("TAG", "onServiceConnected:");
+            mMusicService = (( MusicService.MusicServiceBinder)service).getMusicService();
+            Log.e("TAG",mMusicService.mText );
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.e("TAG", "onServiceDisconnected:");
+            mMusicService = null;
+        }
+    };
+
+
     private StringBuffer mLocation;
-    public String curFragmentTag = "";
     private long exitTime = 0;
 
-    /**     back键
-     *  Android的程序无需刻意的去退出,当你一按下手机的back键的时候，
-     系统会默认调用程序栈中最上层Activity的Destroy()方法来， 销毁当前Activity。当此Activity又被其它Activity启动起来的时候,
-     会重新调用OnCreate()方法进行创建,当栈中所有 Activity都弹出结束后,应用也就随之结束了.
-     如果说程序中存在service之类的,则可以在恰当的位置监听处理下也就可以了.
+    /**
+     * back键
+     * Android的程序无需刻意的去退出,当你一按下手机的back键的时候，
+     * 系统会默认调用程序栈中最上层Activity的Destroy()方法来， 销毁当前Activity。当此Activity又被其它Activity启动起来的时候,
+     * 会重新调用OnCreate()方法进行创建,当栈中所有 Activity都弹出结束后,应用也就随之结束了.
+     * 如果说程序中存在service之类的,则可以在恰当的位置监听处理下也就可以了.
      */
+    private Intent mIntetnt;
 
     /**
      * home键
@@ -61,13 +88,16 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtil.getInstance().error("onCreate");
+
+        mIntetnt = new Intent(MainActivity.this, MusicService.class);
+        bindService(mIntetnt, mServiceConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         LogUtil.getInstance().error("onStart");
-
     }
 
     @Override
@@ -88,18 +118,17 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
 
     @Override
     protected void onDestroy() {
+        stopService(mIntetnt);
+        LogUtil.getInstance().error("MainActivity_____onDestroy");
         super.onDestroy();
-        LogUtil.getInstance().error("onDestroy");
 
     }
 
 
     @AfterViews
     void initView() {
-        //开启一个服务
-//        Intent mIntent = new Intent();
-//        mIntent.setClass(this, LocationService.class);
-//        startService(mIntent);
+
+
         mLocationClient = new LocationClient(getApplicationContext());     //第一步，初始化LocationClient类
 //        mLocationClient.registerLocationListener( myListener );    //注册监听函数
         mLocationClient.registerLocationListener(MainActivity.this);
@@ -199,11 +228,6 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
     }
 
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        Log.e("TAG", "onKeyUp: ");
-        return super.onKeyUp(keyCode, event);
-    }
 
     @Override
     public void onBackPressed() {
@@ -211,6 +235,7 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         Log.e("TAG", "onBackPressed: ");
 
     }
+
     public void ExitApp() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();

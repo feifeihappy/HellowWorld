@@ -19,18 +19,20 @@
         <Button
             android:id="@+id/bt_evetntbus"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:layout_marginRight="10dp"
             android:layout_weight="2"
-            android:text="EventBus" />
+            android:textSize="14dp"
+            android:text="EventBusOne" />
 
         <Button
             android:id="@+id/bt_evetntbustow"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
+            android:textSize="14dp"
             android:layout_marginRight="10dp"
             android:layout_weight="2"
-            android:text="EventBus" />
+            android:text="EventBusTwo" />
 
         <EditText
             android:id="@+id/edit_content"

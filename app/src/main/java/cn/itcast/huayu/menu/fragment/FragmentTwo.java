@@ -2,6 +2,7 @@ package cn.itcast.huayu.menu.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import org.androidannotations.annotations.LongClick;
 import org.androidannotations.annotations.ViewById;
 
 import cn.itcast.huayu.menu.R;
+import cn.itcast.huayu.menu.common.EventMessageCode;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -111,6 +113,11 @@ public class FragmentTwo extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void helloEventBus(MenuListData message) {
-        mTextView.setText(message.menuDataVo.getTitle());
+        if (message.tagFragmentone == EventMessageCode.TAG_FRAGMENTONE){
+            mTextView.setText(message.menuDataVo.getTitle());
+        }
+        Log.e("TAG", "helloEventBus: FragmentTwo");
     }
+
+
 }
