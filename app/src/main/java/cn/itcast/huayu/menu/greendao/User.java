@@ -14,7 +14,12 @@ import org.greenrobot.greendao.annotation.Unique;
  * @author zpf
  * @mail zpfworking@sina.com
  * @createtime 2016/8/18 16:08
+ * GreenDao 介绍
  * http://www.cnblogs.com/whoislcj/p/5651396.html
+ *
+ *  数据库的几个概念：主键，外键，索引，唯一索引
+ * http://blog.csdn.net/xrt95050/article/details/5556411
+ *
  */
 @Entity
 public class User {
