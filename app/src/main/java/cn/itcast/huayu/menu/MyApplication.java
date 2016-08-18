@@ -7,7 +7,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.androidannotations.annotations.EApplication;
 
-import cn.itcast.huayu.menu.cache.GlobalCache;
+import cn.itcast.huayu.menu.cache.AppCache;
 
 /**
  * @author ln：zpf on 2016/7/26
@@ -16,7 +16,11 @@ import cn.itcast.huayu.menu.cache.GlobalCache;
 public class MyApplication extends Application {
 
 
-    private static GlobalCache mGlobalCache;
+    private AppCache mAppCache;
+
+    public AppCache getmAppCache() {
+        return mAppCache;
+    }
 
     @Override
     public void onCreate() {
@@ -24,16 +28,11 @@ public class MyApplication extends Application {
         SDKInitializer.initialize(getApplicationContext());
         CrashReport.initCrashReport(getApplicationContext(), "7e8f387dbf", true);
         initCache();
-
     }
 
-    public static void initCache() {
-        if (mGlobalCache == null){
-            mGlobalCache = new GlobalCache();
-        }
+    private void initCache() {
+        mAppCache = new AppCache(this);
     }
 
-     public GlobalCache getmGlobalCache() {
-        return mGlobalCache;
-    }
+
 }

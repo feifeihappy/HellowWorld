@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,8 +20,17 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.LongClick;
 import org.androidannotations.annotations.ViewById;
 
+import java.text.DateFormat;
+import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import cn.itcast.huayu.menu.MyApplication;
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.common.EventMessageCode;
+import cn.itcast.huayu.menu.greendao.User;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -38,6 +48,11 @@ public class FragmentTwo extends BaseFragment {
     ImageView mImage;
     @ViewById(R.id.bt)
     Button mButton;
+    @BindView(R.id.et)
+    EditText et;
+    @BindView(R.id.bt_data)
+    Button btData;
+    private Unbinder unbinder;
 
     public FragmentTwo() {
     }
@@ -66,21 +81,23 @@ public class FragmentTwo extends BaseFragment {
     void initView() {
 
     }
+
     @Click(R.id.bt)
-    void bt(){
+    void bt() {
 
         String url = "http://juheimg.oss-cn-hangzhou.aliyuncs.com/cookbook/s/52/5198_4cde66e2c75c9abe.jpg";
         Glide
                 .with(this)
                 .load(url)
-                .override(500,500)
+                .override(500, 500)
                 .placeholder(R.mipmap.ic_launcher)
                 .crossFade()
                 .into(mImage);
 
     }
+
     @LongClick(R.id.bt)
-    void longBt(){
+    void longBt() {
         CrashReport.testJavaCrash();
 
     }
@@ -88,6 +105,8 @@ public class FragmentTwo extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        unbinder = ButterKnife.bind(this, getView());
+
     }
 
     @Override
@@ -109,15 +128,27 @@ public class FragmentTwo extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        unbinder.unbind();
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void helloEventBus(MenuListData message) {
-        if (message.tagFragmentone == EventMessageCode.TAG_FRAGMENTONE){
+        if (message.tagFragmentone == EventMessageCode.TAG_FRAGMENTONE) {
             mTextView.setText(message.menuDataVo.getTitle());
         }
         Log.e("TAG", "helloEventBus: FragmentTwo");
     }
 
 
+    @OnClick(R.id.bt_data)
+    public void onClickButton() {
+        String mdata = et.getText().toString();
+        final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+        String comment = "添加时间" + df.format(new Date());
+        User mUser = new User();
+        mUser.setName(mdata);
+        mUser.setTime(comment);
+        mApp.getmAppCache().getDaoSession().getUserDao().insertOrReplace(mUser);
+
+    }
 }

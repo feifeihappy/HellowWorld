@@ -35,9 +35,10 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e("TAG", "MusicService___onCreate:");
-        mMediaPlayer = MediaPlayer.create(this, R.raw.music);
+        //播放音乐
+/*        mMediaPlayer = MediaPlayer.create(this, R.raw.music);
         mMediaPlayer.setLooping(true);
-        mMediaPlayer.start();
+        mMediaPlayer.start();*/
         mText = "确定拿到service对象";
     }
 

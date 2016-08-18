@@ -33,6 +33,7 @@ import cn.itcast.huayu.menu.activity.FourActivity;
 import cn.itcast.huayu.menu.activity.WebViewActivity;
 import cn.itcast.huayu.menu.cache.GlobalCache;
 import cn.itcast.huayu.menu.common.EventMessageCode;
+import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
 import cn.itcast.huayu.menu.util.ToastUtil;
 import de.greenrobot.event.EventBus;
@@ -175,7 +176,7 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
         });
 
 
-        StringBuffer mLocation = GlobalCache.newInstance().getmLocation();
+        StringBuffer mLocation = GlobalCache.getmLocation();
         //获取定位位置
         mTvLocation.setText(mLocation);
 

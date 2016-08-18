@@ -105,7 +105,6 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
         super.onResume();
         LogUtil.getInstance().error("onResume");
 
-
     }
 
     @Override
@@ -181,13 +180,12 @@ public class MainActivity extends BaseActivity implements BDLocationListener {
 //        LogUtil.getInstance().error(sb.toString());
         mLocation = sb;
 
-        GlobalCache.newInstance().setmLocation(sb);
+        GlobalCache.setmLocation(sb);
     }
 
     /**
      * //不执行父类onkeydown中的方法
      * return true ;
-     *
      * @param keyCode
      * @param event
      * @return
