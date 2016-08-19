@@ -9,7 +9,7 @@ import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * greendao.3.0
- * 编译一下自动生成DaoMaster 、DaoSession、Dao
+ * 新建entity编译一下自动生成DaoMaster 、DaoSession、Dao
  *
  * @author zpf
  * @mail zpfworking@sina.com
@@ -20,59 +20,54 @@ import org.greenrobot.greendao.annotation.Unique;
  *  数据库的几个概念：主键，外键，索引，唯一索引
  * http://blog.csdn.net/xrt95050/article/details/5556411
  *
+ * 数据库插入查询
+ * http://blog.csdn.net/xushuaic/article/details/24496191
+ *
  */
 @Entity
 public class User {
 
-    @Id(autoincrement = true)
-    private long id;
+    @Id
+    private Long id;
     private String name;
     private String time;
-    private int age;
-
-    @Generated(hash = 785255723)
-    public User(long id, String name, String time, int age) {
-        this.id = id;
-        this.name = name;
-        this.time = time;
-        this.age = age;
-    }
-
-    @Generated(hash = 586692638)
-    public User() {
-    }
-
-    public int getAge() {
+    private Long age;
+    public Long getAge() {
         return this.age;
     }
-
-    public void setAge(int age) {
+    public void setAge(Long age) {
         this.age = age;
     }
-
-    @NotNull
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(@NotNull String name) {
-        this.name = name;
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getTime() {
         return this.time;
     }
-
     public void setTime(String time) {
         this.time = time;
+    }
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+    @Generated(hash = 802518300)
+    public User(Long id, String name, String time, Long age) {
+        this.id = id;
+        this.name = name;
+        this.time = time;
+        this.age = age;
+    }
+    @Generated(hash = 586692638)
+    public User() {
     }
 
 

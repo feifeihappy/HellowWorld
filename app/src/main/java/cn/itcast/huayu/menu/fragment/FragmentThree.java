@@ -193,7 +193,7 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
         btFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(getActivity());
+//                start(getActivity());
             }
         });
 

@@ -59,7 +59,7 @@ public class MenuAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         System.out.println("getView " + position + " " + convertView);
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.menuadapter_item, parent, false);
             holder = new ViewHolder(convertView);

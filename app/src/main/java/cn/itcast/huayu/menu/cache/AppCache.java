@@ -19,14 +19,13 @@ public class AppCache {
     private final SQLiteDatabase db;
     private final DaoMaster daoMaster;
     private final DaoSession daoSession;
-    private final UserDao userDao;
 
     public AppCache(MyApplication myApplication) {
-        DevOpenHelper helper = new DaoMaster.DevOpenHelper(myApplication, "MyTest-db");
+        DevOpenHelper helper = new DaoMaster.DevOpenHelper(myApplication, "MyTest-db",null);
         db = helper.getWritableDatabase();
+        db.enableWriteAheadLogging();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
-        userDao = daoSession.getUserDao();
 
     }
 
