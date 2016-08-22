@@ -50,7 +50,7 @@ public class MusicService extends Service {
 
     @Override
     public void onDestroy() {
-        mMediaPlayer.stop();
+//        mMediaPlayer.stop();
         super.onDestroy();
         Log.e("TAG", "MusicService____onDestroy:");
     }

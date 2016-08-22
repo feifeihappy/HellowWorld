@@ -35,6 +35,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 主activity
+ * 倍数提高工作效率的Android Studio奇技
+ * http://zlv.me/posts/2015/07/13/14_android-studio-tips/
  */
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements BDLocationListener {

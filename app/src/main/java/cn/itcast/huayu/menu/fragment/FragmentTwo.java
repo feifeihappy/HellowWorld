@@ -29,15 +29,16 @@ import cn.itcast.huayu.menu.common.EventMessageCode;
 import cn.itcast.huayu.menu.greendao.User;
 import cn.itcast.huayu.menu.greendao.UserDao;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
 /**
  * @author ln：zpf on 2016/7/29
- *
- * http://blog.csdn.net/lmj623565791/article/details/46695347
- * PercentRelativeLayout,百分比布局
+ *         <p/>
+ *         http://blog.csdn.net/lmj623565791/article/details/46695347
+ *         PercentRelativeLayout,百分比布局
  */
 @EFragment(R.layout.fragment_two)
 public class FragmentTwo extends BaseFragment {
@@ -57,6 +58,8 @@ public class FragmentTwo extends BaseFragment {
     Button btDatabase;
     @BindView(R.id.et_two)
     EditText etTwo;
+    @BindView(R.id.bt_datadelete)
+    Button btDatadelete;
     private Unbinder unbinder;
     private FragmentTwoListAdapter mFragmentTwoListAdapter;
 
@@ -131,7 +134,7 @@ public class FragmentTwo extends BaseFragment {
 
 
     @OnClick(R.id.bt_data)
-    public void onClickButton() { 
+    public void addData() {
         String mdata = et.getText().toString();
         et.setText("");
         final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
@@ -143,10 +146,14 @@ public class FragmentTwo extends BaseFragment {
         mUser.setTime(comment);
         mUser.setAge(11L);
         mApp.getmAppCache().getDaoSession().getUserDao().insert(mUser);
+        List<User> mUsers = mApp.getmAppCache().getDaoSession().getUserDao().loadAll();//查询数据库
+        mFragmentTwoListAdapter.setData(mUsers);
+        mFragmentTwoListAdapter.notifyDataSetChanged();
+
     }
 
     @OnClick(R.id.bt_database)
-    public void onClickData() {
+    public void queryInput() {
         String mdata = etTwo.getText().toString();
         etTwo.setText("");
         List<User> mUserData = mApp.getmAppCache().getDaoSession().getUserDao().queryBuilder()
@@ -158,4 +165,26 @@ public class FragmentTwo extends BaseFragment {
     }
 
 
+    @OnClick(R.id.bt_datadelete)
+    public void onClickDelete() {
+        String mBtDatadelete = et.getText().toString();
+        if(mBtDatadelete.isEmpty()){
+            new SweetAlertDialog(getActivity())
+                    .setTitleText("输入的内容不能为空")
+                    .show();
+        }
+        et.setText("");
+        UserDao mUserDao = mApp.getmAppCache().getDaoSession().getUserDao();
+        List<User> deleteData = mUserDao.queryBuilder()
+                .where(UserDao.Properties.Name.eq(mBtDatadelete))
+                .orderAsc(UserDao.Properties.Time)
+                .list();
+        for (User mUser :
+                deleteData) {
+            mUserDao.delete(mUser);
+        }
+        mFragmentTwoListAdapter.setData(mUserDao.loadAll());
+        mFragmentTwoListAdapter.notifyDataSetChanged();
+        Log.e("TAG", "onClickDelete: ");
+    }
 }

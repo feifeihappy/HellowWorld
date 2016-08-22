@@ -16,27 +16,28 @@ android {
         useLibrary 'org.apache.http.legacy'
         multiDexEnabled true
     }
+    signingConfigs {
+        signConfig {
+            storeFile file('menu.jks')//签名文件路径，
+            //keystore的路径通常使用项目根目录的相对路径，但也可以是使用绝对路径，尽管这不推荐
+            storePassword '245607894' //密码
+            keyAlias 'menu'
+            keyPassword '245607894'  //密码
+        }
+    }
 //    当程序中使用了第三方的功能，比如分享、地图时，要求程序必须是已签名的
 //    在Gradle中配置签名后，可以使我们的Debug也带上签名
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.signConfig // 配置release包的签名
+            signingConfig signingConfigs.signConfig // 配置release包的签名
         }
         debug {
-//            signingConfig signingConfigs.signConfig // 配置debug包的签名
+            signingConfig signingConfigs.signConfig // 配置debug包的签名
         }
     }
-    signingConfigs {
-//        signConfig {
-//            storeFile file('android.jks')//签名文件路径，
-//            //keystore的路径通常使用项目根目录的相对路径，但也可以是使用绝对路径，尽管这不推荐
-//            storePassword '123456' //密码
-//            keyAlias 'android'
-//            keyPassword '123456'  //密码
-//        }
-    }
+
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -74,6 +75,8 @@ dependencies {
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:support-v4:24.0.0'
+    //布局百分比
+    compile 'com.android.support:percent:22.2.0'
     //信息传递
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     //图片加载缓存框架
@@ -94,8 +97,7 @@ dependencies {
     //greenDAO
     compile 'org.greenrobot:greendao:3.1.0'
 
-    //布局百分比
-    compile 'com.android.support:percent:22.2.0'
+
 
 }
 
@@ -115,4 +117,5 @@ apt {
 }
 greendao {
     targetGenDir 'src/main/java'
+    schemaVersion  2
 }

@@ -2,6 +2,7 @@ package cn.itcast.huayu.menu.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,13 +29,14 @@ import com.baidu.mapapi.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.itcast.huayu.menu.R;
 import cn.itcast.huayu.menu.activity.FourActivity;
 import cn.itcast.huayu.menu.activity.WebViewActivity;
 import cn.itcast.huayu.menu.cache.GlobalCache;
 import cn.itcast.huayu.menu.common.EventMessageCode;
-import cn.itcast.huayu.menu.model.menu.MenuDataVo;
 import cn.itcast.huayu.menu.model.menu.MenuListData;
+import cn.itcast.huayu.menu.receiver.TestBroadcastReceiver;
 import cn.itcast.huayu.menu.util.ToastUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -51,6 +53,8 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
     Button btFragment;
     @BindView(R.id.tv_eventbus)
     TextView tvEventbus;
+    @BindView(R.id.bt_broadcast)
+    Button btBroadcast;
     private TextView mTvTime;
     public Handler mHandler = new Handler() {
         @Override
@@ -81,6 +85,7 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
     private BaiduMap mBaiduMap;
     private LocationClient mLocClient;
     private boolean isFirstLoc = true;//是否是首次定位
+    private TestBroadcastReceiver mTestBroadcastReceiver;
 
     public FragmentThree() {
     }
@@ -127,6 +132,7 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
         mLocClient.start();
 
         mCamera = Camera.open();
+
         return view;
     }
 
@@ -228,6 +234,20 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
 
     }
 
+    @OnClick(R.id.bt_broadcast)
+    public void sendBroadcast() {
+        mTestBroadcastReceiver = new TestBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_INSERT);
+
+        getActivity().registerReceiver(mTestBroadcastReceiver, intentFilter);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_INSERT);
+        intent.putExtra("name", "动态的");
+        getActivity().sendBroadcast(intent);
+
+    }
+
 
     private class LightThread implements Runnable {
         @Override
@@ -262,6 +282,7 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
 
     @Override
     public void onDestroy() {
+        getActivity().unregisterReceiver(mTestBroadcastReceiver);
         EventBus.getDefault().unregister(this);
         // 退出时销毁定位
         mLocClient.stop();
@@ -274,7 +295,7 @@ public class FragmentThree extends BaseFragment implements BDLocationListener {
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void helloEventBus(MenuListData message) {
-        if (message.tagFragmentone == EventMessageCode.TAG_FRAGMENTTOW){
+        if (message.tagFragmentone == EventMessageCode.TAG_FRAGMENTTOW) {
             tvEventbus.setText(message.menuDataVo.getTitle());
         }
         Log.e("TAG", "helloEventBus:FragmentThree");

@@ -16,19 +16,20 @@ import org.greenrobot.greendao.annotation.Unique;
  * @createtime 2016/8/18 16:08
  * GreenDao 介绍
  * http://www.cnblogs.com/whoislcj/p/5651396.html
- *
- *  数据库的几个概念：主键，外键，索引，唯一索引
+ * <p/>
+ * 数据库的几个概念：主键，外键，索引，唯一索引
  * http://blog.csdn.net/xrt95050/article/details/5556411
- *
+ * <p/>
  * 数据库插入查询
  * http://blog.csdn.net/xushuaic/article/details/24496191
- *
+ * http://www.jianshu.com/p/c4e9288d2ce6
  */
 @Entity
 public class User {
 
     @Id
     private Long id;
+    @NotNull
     private String name;
     private String time;
     private Long age;
@@ -47,7 +48,7 @@ public class User {
     public String getName() {
         return this.name;
     }
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
     public Long getId() {
@@ -56,11 +57,8 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
-    public void setId(long id) {
-        this.id = id;
-    }
-    @Generated(hash = 802518300)
-    public User(Long id, String name, String time, Long age) {
+    @Generated(hash = 1036503643)
+    public User(Long id, @NotNull String name, String time, Long age) {
         this.id = id;
         this.name = name;
         this.time = time;
@@ -69,6 +67,8 @@ public class User {
     @Generated(hash = 586692638)
     public User() {
     }
+
+  
 
 
     //下面省去了 setter/getter

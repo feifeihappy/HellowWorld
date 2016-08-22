@@ -42,7 +42,7 @@ public class UserDao extends AbstractDao<User, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
+                "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"TIME\" TEXT," + // 2: time
                 "\"AGE\" INTEGER);"); // 3: age
     }
@@ -61,11 +61,7 @@ public class UserDao extends AbstractDao<User, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        String name = entity.getName();
-        if (name != null) {
-            stmt.bindString(2, name);
-        }
+        stmt.bindString(2, entity.getName());
  
         String time = entity.getTime();
         if (time != null) {
@@ -86,11 +82,7 @@ public class UserDao extends AbstractDao<User, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        String name = entity.getName();
-        if (name != null) {
-            stmt.bindString(2, name);
-        }
+        stmt.bindString(2, entity.getName());
  
         String time = entity.getTime();
         if (time != null) {
@@ -112,7 +104,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
+            cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // time
             cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // age
         );
@@ -122,7 +114,7 @@ public class UserDao extends AbstractDao<User, Long> {
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.getString(offset + 1));
         entity.setTime(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setAge(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
      }

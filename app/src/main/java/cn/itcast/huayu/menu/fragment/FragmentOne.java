@@ -45,6 +45,8 @@ import de.greenrobot.event.EventBus;
 
 /**
  * @author ln：zpf on 2016/7/29
+ * 倍数提高工作效率的Android Studio奇技
+ * http://zlv.me/posts/2015/07/13/14_android-studio-tips/
  */
 @EFragment(R.layout.fragment_one)
 public class FragmentOne extends BaseFragment implements
@@ -355,13 +357,15 @@ public class FragmentOne extends BaseFragment implements
     public void onClick() {
         if (mData != null && mDataPosition != null) {
 
-            EventBus.getDefault().post(new MenuListData(EventMessageCode.TAG_FRAGMENTONE,mData.get(mDataPosition)));
+            EventBus.getDefault().post(new MenuListData(EventMessageCode.TAG_FRAGMENTONE, mData.get(mDataPosition)));
         }
     }
 
     @OnClick(R.id.bt_evetntbustow)
     public void onClickTwo() {
-        EventBus.getDefault().post(new MenuListData(EventMessageCode.TAG_FRAGMENTTOW, mData.get(mDataPosition)));
+        if (mData != null && mDataPosition != null) {
+            EventBus.getDefault().post(new MenuListData(EventMessageCode.TAG_FRAGMENTTOW, mData.get(mDataPosition)));
+        }
 
     }
 

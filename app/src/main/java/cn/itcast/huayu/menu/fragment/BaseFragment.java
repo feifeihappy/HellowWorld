@@ -100,7 +100,7 @@ public class BaseFragment extends Fragment {
     @UiThread
     public void hideLoadingDialog() {
         if (this != null && pDialog != null) {
-            pDialog.hide();
+                pDialog.hide();
         }
     }
 
